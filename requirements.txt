@@ -1,0 +1,6 @@
+# Responsable: Gael
+# Ejercicio: Parte 3: entorno reproducible
+# Qué completar: Mantener este archivo coherente con las rutas, dependencias y el arranque final. Documentar únicamente resultados comprobados.
+
+psycopg[binary]>=3.2,<4
+python-dotenv[cli]>=1,<2

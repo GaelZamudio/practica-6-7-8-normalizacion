@@ -1,0 +1,41 @@
+# Responsable: Gael
+# Ejercicio: Parte 3: entorno reproducible
+# Qué completar: Mantener este archivo coherente con las rutas, dependencias y el arranque final. Documentar únicamente resultados comprobados.
+
+name: huellared-p678
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-huellared}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-p678_postgres_demo}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5434}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+    restart: unless-stopped
+  inicializar:
+    build: .
+    environment:
+      PGHOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB:-huellared}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-p678_postgres_demo}
+      HUELLARED_APP_PASSWORD: ${HUELLARED_APP_PASSWORD:-p678_app_demo}
+      HUELLARED_CONSULTA_PASSWORD: ${HUELLARED_CONSULTA_PASSWORD:-p678_consulta_demo}
+      HUELLARED_ADMIN_PASSWORD: ${HUELLARED_ADMIN_PASSWORD:-p678_admin_demo}
+    command: ["python", "docker/preparar_base.py"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+volumes:
+  postgres_data:

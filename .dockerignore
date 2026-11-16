@@ -1,0 +1,13 @@
+# Responsable: Gael
+# Ejercicio: Parte 3: entorno reproducible
+# Qué completar: Mantener este archivo coherente con las rutas, dependencias y el arranque final. Documentar únicamente resultados comprobados.
+
+.git
+.env
+.env.*
+.venv
+**/__pycache__
+**/*.pyc
+data
+base/huellared/datos/generados
+practica6-8/evidencias
