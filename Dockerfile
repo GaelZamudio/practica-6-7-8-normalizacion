@@ -9,3 +9,5 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY base/huellared ./base/huellared
 COPY docker ./docker
+
+COPY practica6-8/migraciones ./practica6-8/migraciones

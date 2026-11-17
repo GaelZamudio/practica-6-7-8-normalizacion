@@ -132,7 +132,7 @@ Capturas en `practica6-8/evidencias/integrantes/<nombre-del-archivo-sin-extensio
 HuellaRed procede de https://github.com/GaelZamudio/practica-4-y-5-implementacion,
 `base/huellared/` conserva esquema, migración 001, generador, cargadores y roles. Los cambios nuevos al modelo se harán mediante migraciones numeradas después de cargar los datos, no reescribiendo el esquema inicial.
 
-Gael creará los entregables cuando exista contenido real: `practica6-8/normalizacion.md`, `practica6-8/algebra.md`, migraciones justificadas, consultas de HuellaRed, exportador y grupo RelaX. 
+El análisis 1.1–1.3 está en [normalizacion.md](practica6-8/normalizacion.md); el intercambio externo de F sigue pendiente. Las migraciones 002 y 003 construyen y normalizan una instantánea didáctica de rescates y zonas en el esquema `normalizacion`, conservando las 23 tablas operativas de `public`. Esa descomposición está disponible para la explicación individual. Gael completará `practica6-8/algebra.md`, las consultas, el exportador y el grupo RelaX.
 También implementará la carga automática de sismos y la ejecución final de consultas. El análisis formal de equivalencia de F con otro equipo pertenece al 1.2 de Gael.
 
 ## Arranque básico disponible
@@ -143,8 +143,8 @@ docker compose ps -a
 docker compose logs inicializar
 ```
 
-Actualmente Compose solo prepara HuellaRed: esquema, 001, roles y carga sintética con marca de finalización. Usa PostgreSQL 17, base `huellared`, puerto local 5434 y volumen nombrado separado. Las credenciales públicas de prueba están en `.env.example`; no se necesita crear `.env` para los valores por defecto.
-`inicializar` debe terminar con código 0 y PostgreSQL permanecer saludable. Este arranque aún no está validado en un clon limpio; las comprobaciones realizadas hasta ahora son de configuración y sintaxis.
+Actualmente Compose prepara HuellaRed: esquema, 001, roles, carga sintética con marca de finalización y migraciones 002–003 del ejemplo de normalización. Estas se aplican después de la carga, se verifican y se registran para no repetirse. Usa PostgreSQL 17, base `huellared`, puerto local 5434 y volumen nombrado separado. Las credenciales públicas de prueba están en `.env.example`; no se necesita crear `.env` para los valores por defecto.
+`inicializar` debe terminar con código 0 y PostgreSQL permanecer saludable. El SQL y el inicializador, incluida su repetición, se comprobaron en una copia aislada con PostgreSQL 18.6; véanse resultados en normalizacion.md. Falta validar el contenedor PostgreSQL 17 y el clon limpio.
 Los SQL originales de sismos son entradas para su futura carga: no ejecutarlos repetidamente sobre una base ya poblada, porque pueden duplicar registros o fallar.
 
 ## Cierre de la entrega
