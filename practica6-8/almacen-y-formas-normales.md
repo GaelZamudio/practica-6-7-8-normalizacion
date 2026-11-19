@@ -1,7 +1,7 @@
 # Ejercicio 1.4 — Formas normales del almacén de sismos
 
 **Responsable y autor:** José.  
-**Estado:** estructura preparada; análisis pendiente.
+**Estado:** análisis redactado; pendiente de revisión del equipo.
 
 ## Alcance y fuentes
 
@@ -9,18 +9,22 @@ Analizar las cuatro dimensiones del [esquema original](../base/sismos/sql/00-dat
 Se utiliza el almacén original 00–05, sin las extensiones de anomalías.
 Las dependencias deben justificarse por reglas del negocio, no por coincidencias en los datos.
 
+**Base de este análisis:** el DDL de `00-datawarehouse_tables.sql` y las reglas del negocio de cada dimensión. Ninguna dependencia se justifica con los datos cargados y el análisis no modifica el almacén. Donde la conclusión depende de una premisa de diseño (el grano de la dimensión), la premisa se declara en la fila «Cada fila representa…» junto con lo que cambiaría si no se cumpliera.
+
+**Criterio:** las formas normales se evalúan contra **todas** las claves candidatas, no solo contra la PK. 2FN: ningún atributo no primo depende de una parte de una clave candidata. 3FN: para toda dependencia X → A no trivial, X es superclave o A es primo (forma parte de alguna clave candidata).
+
 ## dim_zonas
 
 **PK declarada en el esquema:** `id_zonas`. Esto no sustituye el análisis de otras claves candidatas.
 
 | Aspecto | Análisis de José |
 |---|---|
-| Cada fila representa… | Pendiente. |
-| Dependencias funcionales y regla que justifica cada una | Pendiente. |
-| Claves candidatas justificadas | Pendiente. |
-| Forma normal alcanzada y justificación | Pendiente. |
-| Dependencia transitiva conservada, si existe | Pendiente. |
-| Beneficio y costo de conservar esa desnormalización | Pendiente. |
+| Cada fila representa… | Una entidad federativa con su población total, femenina y masculina; es la zona a la que se asocian los impactos.<br>**Premisa de grano:** el esquema solo identifica geografía con `entidad` y `nom_ent` (no hay municipio ni localidad), así que la zona es la entidad y hay una fila por entidad. Si el diseño admitiera varias zonas por entidad, `entidad` dejaría de ser clave y aparecería la cadena `id_zonas → entidad → nom_ent`. |
+| Dependencias funcionales y regla que justifica cada una | • `id_zonas → entidad, nom_ent, pobtot, pobfem, pobmas`: la PK identifica la zona.<br>• `entidad → nom_ent`: el catálogo oficial de entidades asigna un solo nombre a cada clave.<br>• `nom_ent → entidad`: cada nombre oficial corresponde a una sola clave.<br>• `entidad → pobtot, pobfem, pobmas`: la población es una cifra por zona y la zona es la entidad.<br>• `{pobfem, pobmas} → pobtot`: regla censal, la población total es la suma de la femenina y la masculina (la misma identidad da `{pobtot, pobfem} → pobmas` y `{pobtot, pobmas} → pobfem`). El esquema no la declara ni la fuerza. |
+| Claves candidatas justificadas | • `id_zonas`: PK declarada, clave sustituta.<br>• `entidad`: por la premisa de grano identifica la fila.<br>• `nom_ent`: el nombre oficial también es único por entidad.<br>`entidad` y `nom_ent` son claves por regla de negocio, no por el motor: no hay `UNIQUE` y `entidad` admite `NULL`. Las tres son simples. |
+| Forma normal alcanzada y justificación | **2FN en sentido estricto.**<br>• 1FN: columnas escalares, sin grupos repetidos.<br>• 2FN: las tres claves candidatas son simples, así que no hay dependencias parciales.<br>• 3FN: `entidad ↔ nom_ent` no la viola, porque sus determinantes son claves candidatas (también cumple BCNF en ese punto). Lo que la rompe es la identidad `{pobfem, pobmas} → pobtot`: el determinante no es superclave y `pobtot` no es primo.<br>Si se excluye la columna derivada, la dimensión queda en 3FN (y BCNF). |
+| Dependencia transitiva conservada, si existe | • **De catálogo: no existe.** El par `entidad` / `nom_ent` parece una dependencia entre no claves, pero ambas son claves candidatas, por lo que `id_zonas → entidad → nom_ent` no es transitiva.<br>• **De cálculo: sí se conserva.** `id_zonas → {pobfem, pobmas} → pobtot`: `pobtot` se guarda aunque es derivable. |
+| Beneficio y costo de conservar esa desnormalización | **Beneficio:** `pobtot` es la cifra natural para dimensionar la afectación de una zona; guardarla evita sumar y manejar `NULL` en cada consulta.<br>**Costo:** si se corrige `pobfem` o `pobmas`, hay que actualizar `pobtot` en la misma operación, y sin un `CHECK` el motor deja pasar un total que no cuadra. El costo es bajo: la dimensión tiene pocas filas y casi no se actualiza. |
 
 ## dim_economia
 
@@ -28,12 +32,12 @@ Las dependencias deben justificarse por reglas del negocio, no por coincidencias
 
 | Aspecto | Análisis de José |
 |---|---|
-| Cada fila representa… | Pendiente. |
-| Dependencias funcionales y regla que justifica cada una | Pendiente. |
-| Claves candidatas justificadas | Pendiente. |
-| Forma normal alcanzada y justificación | Pendiente. |
-| Dependencia transitiva conservada, si existe | Pendiente. |
-| Beneficio y costo de conservar esa desnormalización | Pendiente. |
+| Cada fila representa… | Los indicadores económicos de una entidad federativa: producción bruta total, insumos utilizados, consumo intermedio, valor agregado, formación de capital y activos fijos adquiridos.<br>**Premisa de grano:** como en `dim_zonas`, la geografía se identifica solo con `entidad` y `nombre_entidad`, y no hay columna de periodo ni de sector que distinga dos filas de la misma entidad; se asume una fila por entidad. Si hubiera varias (por año o por sector), `entidad` dejaría de ser clave y `id_economia → entidad → nombre_entidad` sería transitiva. |
+| Dependencias funcionales y regla que justifica cada una | • `id_economia → entidad, nombre_entidad` y todos los indicadores: la PK identifica la fila.<br>• `entidad → nombre_entidad` y `nombre_entidad → entidad`: catálogo oficial de entidades, un nombre por clave y una clave por nombre.<br>• `entidad →` todos los indicadores: cada indicador es una cifra de la entidad.<br>• `{produccion_bruta_total, consumo_intermedio} → valor_agregado`: regla contable, valor agregado = producción bruta − consumo intermedio (la misma identidad da `{produccion_bruta_total, valor_agregado} → consumo_intermedio` y `{consumo_intermedio, valor_agregado} → produccion_bruta_total`). El esquema no la declara ni la fuerza.<br>• No se afirma ninguna dependencia entre `insumos_utilizados`, `formacion_capital` y `activos_fijos_adquiridos`: sin la definición de cada indicador en el diccionario de datos no hay regla que la justifique. |
+| Claves candidatas justificadas | • `id_economia`: PK declarada, clave sustituta.<br>• `entidad`: por la premisa de grano identifica la fila.<br>• `nombre_entidad`: el nombre oficial también es único por entidad.<br>Son claves por regla de negocio, no por el motor: no hay `UNIQUE` y `entidad` admite `NULL`. Además `entidad` está tipada como `DOUBLE PRECISION`, algo atípico para un código, pero eso no cambia su papel como clave. Las tres son simples. |
+| Forma normal alcanzada y justificación | **2FN en sentido estricto.**<br>• 1FN: columnas escalares, sin grupos repetidos.<br>• 2FN: las tres claves candidatas son simples, así que no hay dependencias parciales.<br>• 3FN: `entidad ↔ nombre_entidad` no la viola, porque sus determinantes son claves candidatas. Lo que la rompe es la identidad contable `{produccion_bruta_total, consumo_intermedio} → valor_agregado`: el determinante no es superclave y `valor_agregado` no es primo.<br>Si se excluye la columna derivada, la dimensión queda en 3FN (y BCNF). Si el diccionario de datos define `valor_agregado` de otra forma, la identidad desaparece y la conclusión sería 3FN. |
+| Dependencia transitiva conservada, si existe | • **De catálogo: no existe**, por la misma razón que en `dim_zonas`: `entidad` y `nombre_entidad` son claves candidatas.<br>• **De cálculo: sí se conserva.** `id_economia → {produccion_bruta_total, consumo_intermedio} → valor_agregado`: `valor_agregado` se guarda aunque es derivable. |
+| Beneficio y costo de conservar esa desnormalización | **Beneficio:** `valor_agregado` es el indicador de referencia para medir el peso económico de una entidad; guardarlo evita recalcularlo y garantiza una sola definición para todas las consultas.<br>**Costo:** si `produccion_bruta_total` o `consumo_intermedio` se corrigen o se recargan por separado, `valor_agregado` queda desactualizado, y sin un `CHECK` el motor no lo detecta. El costo es bajo: pocas filas y casi sin actualizaciones. |
 
 ## dim_tiempo
 
@@ -41,12 +45,12 @@ Las dependencias deben justificarse por reglas del negocio, no por coincidencias
 
 | Aspecto | Análisis de José |
 |---|---|
-| Cada fila representa… | Pendiente. |
-| Dependencias funcionales y regla que justifica cada una | Pendiente. |
-| Claves candidatas justificadas | Pendiente. |
-| Forma normal alcanzada y justificación | Pendiente. |
-| Dependencia transitiva conservada, si existe | Pendiente. |
-| Beneficio y costo de conservar esa desnormalización | Pendiente. |
+| Cada fila representa… | Un instante de calendario: una fecha con su hora UTC, descompuesta en año, mes, día y trimestre.<br>**Premisa de grano:** la dimensión registra instantes y cada instante aparece una sola vez, de modo que varias filas pueden compartir fecha pero no la pareja fecha + hora. Si el diseño repitiera instantes (una fila por evento), las claves compuestas de abajo no se sostendrían y la conclusión cambiaría (ver «Forma normal»). |
+| Dependencias funcionales y regla que justifica cada una | • `id_tiempo → hora_utc, fecha, anio, mes, dia, trimestre`: la PK identifica el instante.<br>• `fecha → anio, mes, dia` y `{anio, mes, dia} → fecha`: regla de calendario, una fecha equivale a su descomposición.<br>• `mes → trimestre`: regla de calendario, cada mes pertenece a un solo trimestre; por tanto también `fecha → trimestre`.<br>• `{fecha, hora_utc} → id_tiempo`: un instante es un miembro único de la dimensión. |
+| Claves candidatas justificadas | • `id_tiempo`: PK declarada, clave sustituta.<br>• `{fecha, hora_utc}`: un instante es la fecha más la hora.<br>• `{anio, mes, dia, hora_utc}`: equivalente a la anterior, porque `{anio, mes, dia}` ↔ `fecha`.<br>`fecha` sola no es clave (varios instantes por día) ni lo es `hora_utc` sola. Ninguna clave compuesta está declarada como `UNIQUE`.<br>Atributos primos: `id_tiempo`, `fecha`, `hora_utc`, `anio`, `mes`, `dia`. El único no primo es `trimestre`. |
+| Forma normal alcanzada y justificación | **1FN.**<br>• 1FN: columnas escalares, sin grupos repetidos.<br>• 2FN no se cumple: `trimestre`, el único atributo no primo, depende de `mes` y de `fecha`, que son parte de las claves candidatas `{anio, mes, dia, hora_utc}` y `{fecha, hora_utc}`. Es una dependencia parcial.<br>• 3FN tampoco, porque exige 2FN. Además, `mes → trimestre` la viola por sí sola: `mes` no es superclave y `trimestre` no es primo.<br>Matiz: si solo se mirara la PK `id_tiempo`, parecería 2FN y fallaría 3FN por las cadenas vía `fecha` y vía `mes`; el análisis de todas las claves candidatas es lo que la baja a 1FN. Si el diseño repitiera instantes y la única clave fuera `id_tiempo`, sería 2FN. |
+| Dependencia transitiva conservada, si existe | • `id_tiempo → mes → trimestre`: **se conserva**. `mes` no es superclave y `trimestre` no es primo.<br>• `id_tiempo → fecha → anio, mes, dia`: **no viola 3FN**. Es una dependencia entre atributos primos, porque `anio`, `mes` y `dia` forman parte de la clave candidata `{anio, mes, dia, hora_utc}`; solo violaría BCNF. |
+| Beneficio y costo de conservar esa desnormalización | **Beneficio:** `anio`, `mes`, `dia` y `trimestre` precalculados permiten agrupar por periodo sin funciones de fecha y de forma uniforme en todas las consultas.<br>**Costo:** casi nulo después de la carga, porque una fecha nunca cambia y las copias no se desincronizan. Solo exige derivarlas bien al cargar (por ejemplo, `trimestre` a partir de `mes`). Es la desnormalización más barata del almacén. |
 
 ## dim_sismos
 
@@ -54,12 +58,12 @@ Las dependencias deben justificarse por reglas del negocio, no por coincidencias
 
 | Aspecto | Análisis de José |
 |---|---|
-| Cada fila representa… | Pendiente. |
-| Dependencias funcionales y regla que justifica cada una | Pendiente. |
-| Claves candidatas justificadas | Pendiente. |
-| Forma normal alcanzada y justificación | Pendiente. |
-| Dependencia transitiva conservada, si existe | Pendiente. |
-| Beneficio y costo de conservar esa desnormalización | Pendiente. |
+| Cada fila representa… | Un evento sísmico individual: magnitud, epicentro (`latitud`, `longitud`), `profundidad`, referencia textual de localización y el estado asociado (`estado` y `nombre_estado`). El instante en que ocurrió vive en `dim_tiempo`, no aquí.<br>**Premisa de grano:** un sismo por fila. |
+| Dependencias funcionales y regla que justifica cada una | • `id_sismo → magnitud, latitud, longitud, profundidad, referencia_de_localizacion, estado, nombre_estado`: la PK identifica el evento.<br>• `estado → nombre_estado`: catálogo, cada clave o abreviatura de estado tiene un solo nombre.<br>• `nombre_estado → estado`: cada nombre corresponde a un solo estado.<br>• No se afirma `{latitud, longitud} → estado`: es una relación geométrica (un punto dentro de un polígono), no una regla almacenada, y los epicentros en el mar no caen en ningún estado.<br>• Tampoco `referencia_de_localizacion → estado`: el esquema no documenta cómo se obtiene `estado`; solo se afirmaría citando la convención del catálogo fuente. |
+| Claves candidatas justificadas | • `id_sismo`: PK declarada, clave sustituta.<br>• No hay otra clave natural justificable por regla de negocio dentro de esta tabla: lo que identificaría un evento es el epicentro más el instante, y el instante está en `dim_tiempo`; coordenadas y magnitud no garantizan unicidad por sí solas.<br>Por eso `estado` y `nombre_estado` no son claves ni atributos primos. |
+| Forma normal alcanzada y justificación | **2FN.**<br>• 1FN: columnas escalares, sin grupos repetidos.<br>• 2FN: la única clave candidata es simple, así que no hay dependencias parciales.<br>• 3FN no se cumple: `estado → nombre_estado` tiene un determinante que no es superclave (muchos sismos comparten estado) y un dependiente que no es primo. |
+| Dependencia transitiva conservada, si existe | **Se conserva:** `id_sismo → estado → nombre_estado`. Es una dependencia de catálogo: el estado actúa como código y su nombre es la parte redundante. |
+| Beneficio y costo de conservar esa desnormalización | **Beneficio:** cada sismo trae el nombre de su estado y los reportes por estado salen sin joins; el esquema en estrella no tiene una dimensión de estados.<br>**Costo:** es la dimensión que más crece (un sismo por fila) y el nombre se repite en cada fila. Corregir o estandarizar un nombre obliga a actualizar todos los sismos del estado y además las copias en `dim_zonas` (`nom_ent`) y `dim_economia` (`nombre_entidad`), sin ninguna restricción que las una. Si falta una copia, un `GROUP BY nombre_estado` parte el mismo estado en dos grupos. |
 
 ## Conclusión
 
@@ -67,4 +71,4 @@ Redactar un párrafo sobre cuándo conviene desnormalizar y qué habría que vig
 No asumir que todas las dimensiones incumplen 3FN. Si no se identifica una dependencia transitiva en alguna,
 explicar por qué, en lugar de inventarla.
 
-**Conclusión de José:** pendiente.
+**Conclusión de José:** Conviene desnormalizar cuando la lectura domina sobre la escritura, el dato redundante casi no cambia o se deriva de forma determinista de otros, y existe un solo lugar donde se calcula. El almacén de sismos lo ilustra: las columnas de calendario de `dim_tiempo` cuestan casi nada porque una fecha no cambia, mientras que el nombre del estado repetido en `dim_sismos` sí cuesta, porque corregirlo obliga a tocar muchas filas. También muestra que no toda aparente transitividad lo es: en `dim_zonas` y `dim_economia` el par código/nombre no cuenta, porque `entidad` identifica la fila, y lo único que se conserva ahí son columnas calculadas (`pobtot`, `valor_agregado`) cuya dependencia solo existe si la identidad de negocio se cumple. En HuellaRed, donde rescates, estancias y adopciones se escriben a diario, cada copia redundante es un riesgo mayor, así que se desnormaliza solo donde la lectura es frecuente y se vigila lo siguiente: que cada valor tenga una única fuente de verdad (por ejemplo `animal.estado_actual`, que resume lo que dicen `estancia`, `solicitud_adopcion` y `adopcion`, o `vacunacion.fecha_proxima_dosis`, derivable de la fecha de la atención y de `intervalo_refuerzo_dias`); que se actualice en un solo punto (un trigger, una columna generada o una vista materializada); que existan restricciones (`CHECK`, `UNIQUE`, `NOT NULL`) que detecten el desfase, a diferencia del almacén, donde nada impide que `pobtot` no cuadre con sus partes; y que se corran consultas periódicas que cuenten discrepancias y deban dar cero.
