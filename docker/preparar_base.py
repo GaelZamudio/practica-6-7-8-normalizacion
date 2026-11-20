@@ -62,7 +62,8 @@ def main():
                          ('huellared_p45',))
             print('Baseline load recorded.')
     migrar_normalizacion()
-    print('HuellaRed ready; normalization example migrated. Queries and RelaX export are pending.')
+    subprocess.run([sys.executable, str(ROOT / 'practica6-8/relax/exportar-grupo.py')], check=True)
+    print('HuellaRed ready; normalization migrated and RelaX group exported. Part 2 queries are pending.')
 
 if __name__ == '__main__':
     main()

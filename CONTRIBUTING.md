@@ -9,7 +9,7 @@
 | **Alejandro** | Proyecto asignado: **2.3**, tres consultas existentes de sismos traducidas a álgebra con sus árboles y explicación.|
 | **Cada integrante** | Tres consultas individuales propias y explicación personal de una descomposición de la Parte 1. |
 
-Para el trabajo individual de José y Alejandro: se preparará sobre HuellaRed cuando Gael entregue el esquema y grupo de RelaX definitivos.
+Para el trabajo individual de José y Alejandro: usar el esquema operativo de HuellaRed y la misma versión de `practica6-8/relax/grupo.txt`, siguiendo su README.
 
 ## Ramas y Pull Requests — obligatorio
 
@@ -115,7 +115,7 @@ No es necesario desplegar PHP ni modificar las tablas para traducir estas consul
 
 ## Trabajo individual de los tres integrantes
 
-Cada persona escribe su propia entrega cuando esté disponible la muestra definitiva de HuellaRed. Se entrega dentro de la misma rama de trabajo de cada responsable; José y Alejandro usan `proyecto-asignado` también para estos archivos.
+Cada persona escribe su propia entrega sobre la muestra compartida de HuellaRed en `practica6-8/relax/grupo.txt`. Se entrega dentro de la misma rama de trabajo de cada responsable; José y Alejandro usan `proyecto-asignado` también para estos archivos.
 
 | Autor | Documento | SQL |
 |---|---|---|
@@ -132,7 +132,7 @@ Capturas en `practica6-8/evidencias/integrantes/<nombre-del-archivo-sin-extensio
 HuellaRed procede de https://github.com/GaelZamudio/practica-4-y-5-implementacion,
 `base/huellared/` conserva esquema, migración 001, generador, cargadores y roles. Los cambios nuevos al modelo se harán mediante migraciones numeradas después de cargar los datos, no reescribiendo el esquema inicial.
 
-El análisis 1.1–1.3 está en [normalizacion.md](practica6-8/normalizacion.md); el intercambio externo de F sigue pendiente. Las migraciones 002 y 003 construyen y normalizan una instantánea didáctica de rescates y zonas en el esquema `normalizacion`, conservando las 23 tablas operativas de `public`. Esa descomposición está disponible para la explicación individual. Gael completará `practica6-8/algebra.md`, las consultas, el exportador y el grupo RelaX.
+El análisis 1.1–1.3 está en [normalizacion.md](practica6-8/normalizacion.md); el intercambio externo de F sigue pendiente. Las migraciones 002 y 003 construyen y normalizan una instantánea didáctica de rescates y zonas en el esquema `normalizacion`, conservando las 23 tablas operativas de `public`. Esa descomposición está disponible para la explicación individual. El exportador y el grupo RelaX están en `practica6-8/relax/`. Gael completará `practica6-8/algebra.md` y las consultas del equipo.
 También implementará la carga automática de sismos y la ejecución final de consultas. El análisis formal de equivalencia de F con otro equipo pertenece al 1.2 de Gael.
 
 ## Arranque básico disponible
@@ -143,7 +143,7 @@ docker compose ps -a
 docker compose logs inicializar
 ```
 
-Actualmente Compose prepara HuellaRed: esquema, 001, roles, carga sintética con marca de finalización y migraciones 002–003 del ejemplo de normalización. Estas se aplican después de la carga, se verifican y se registran para no repetirse. Usa PostgreSQL 17, base `huellared`, puerto local 5434 y volumen nombrado separado. Las credenciales públicas de prueba están en `.env.example`; no se necesita crear `.env` para los valores por defecto.
+Actualmente Compose prepara HuellaRed: esquema, 001, roles, carga sintética con marca de finalización y migraciones 002–003 del ejemplo de normalización. Estas se aplican después de la carga, se verifican y se registran para no repetirse. Al terminar se exporta la muestra de RelaX a la carpeta versionada del repositorio. Usa PostgreSQL 17, base `huellared`, puerto local 5434 y volumen nombrado separado. Las credenciales públicas de prueba están en `.env.example`; no se necesita crear `.env` para los valores por defecto.
 `inicializar` debe terminar con código 0 y PostgreSQL permanecer saludable. El SQL y el inicializador, incluida su repetición, se comprobaron en una copia aislada con PostgreSQL 18.6; véanse resultados en normalizacion.md. Falta validar el contenedor PostgreSQL 17 y el clon limpio.
 Los SQL originales de sismos son entradas para su futura carga: no ejecutarlos repetidamente sobre una base ya poblada, porque pueden duplicar registros o fallar.
 
@@ -153,3 +153,7 @@ Los SQL originales de sismos son entradas para su futura carga: no ejecutarlos r
 - José hará la prueba desde un clon nuevo una vez completada la integración; registrará fecha, commit exacto, comando y resultado real en el README final.
 
 - Uso de IA hasta ahora: Codex ayudó a preparar la estructura, la automatización inicial y la extracción de consultas. 
+
+## Grupo compartido de RelaX — ejercicio 2.1
+
+El exportador y las instrucciones están en [practica6-8/relax/README.md](practica6-8/relax/README.md). El archivo `grupo.txt` contiene la muestra común de HuellaRed para las consultas del equipo y las individuales. José y Alejandro deben usar la misma versión; `muestra.sql` permite comparar los resultados en una sesión de pgAdmin con tablas temporales. No editar los datos a mano ni comparar contra las tablas completas de public. Gael integra y regenera la muestra; la explicación individual de la descomposición sigue en normalizacion.md.

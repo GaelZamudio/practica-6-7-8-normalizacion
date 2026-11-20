@@ -32,6 +32,8 @@ services:
       HUELLARED_APP_PASSWORD: ${HUELLARED_APP_PASSWORD:-p678_app_demo}
       HUELLARED_CONSULTA_PASSWORD: ${HUELLARED_CONSULTA_PASSWORD:-p678_consulta_demo}
       HUELLARED_ADMIN_PASSWORD: ${HUELLARED_ADMIN_PASSWORD:-p678_admin_demo}
+    volumes:
+      - ./practica6-8/relax:/app/practica6-8/relax
     command: ["python", "docker/preparar_base.py"]
     depends_on:
       postgres:

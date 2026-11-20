@@ -11,3 +11,4 @@ COPY base/huellared ./base/huellared
 COPY docker ./docker
 
 COPY practica6-8/migraciones ./practica6-8/migraciones
+COPY practica6-8/relax/exportar-grupo.py ./practica6-8/relax/exportar-grupo.py

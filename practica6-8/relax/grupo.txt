@@ -1,0 +1,419 @@
+group: HuellaRed - practicas 6-8
+description: Muestra sintetica exportada de PostgreSQL; 23 tablas operativas, con referencias conservadas. fecha_hora es string ISO.
+
+adopcion = { id_animal:number, id_persona:number, fecha_adopcion:date, fecha_devolucion:date, motivo_devolucion:string
+  113, 106, 2026-07-31, 2026-09-14, 'Falta de tiempo'
+  194, 158, 2025-08-17, null, null
+  222, 250, 2025-01-28, 2025-05-09, 'Cambio de domicilio'
+  281, 110, 2024-02-22, 2024-03-29, 'Problemas de conducta'
+  281, 250, 2024-06-08, null, null
+  321, 250, 2025-06-10, null, null
+  348, 158, 2025-12-13, null, null
+  422, 106, 2026-02-13, null, null
+  424, 158, 2025-06-22, null, null
+  443, 194, 2025-03-13, null, null
+}
+
+adoptante = { id_persona:number, tipo_vivienda:string, tiene_patio:boolean, otras_mascotas:boolean
+  85, 'casa', true, false
+  106, 'otro', false, false
+  110, 'departamento', true, true
+  158, 'casa', false, false
+  194, 'casa', true, true
+  197, 'casa', true, false
+  240, 'casa', false, false
+  250, 'departamento', true, false
+  297, 'casa', false, false
+  305, 'casa', true, false
+}
+
+animal = { id_animal:number, nombre:string, especie:string, sexo:string, fecha_nacimiento_aprox:date, color:string, senas:string, estado_actual:string, id_rescate:number, id_madre:number
+  11, 'Gordo', 'perro', 'hembra', null, 'Manchado', 'Manchas blancas en las patas', 'en_hogar_temporal', 11, null
+  21, 'Toby', 'perro', 'macho', null, 'Blanco', 'Oreja caída', 'en_atencion', 21, null
+  24, 'Rocky', 'perro', 'macho', null, 'Tricolor', 'Cicatriz en el lomo', 'en_hogar_temporal', 24, null
+  32, 'Kira', 'otro', 'macho', 2016-03-16, 'Negro', 'Cola cortada', 'en_atencion', 32, null
+  48, 'Pelusa', 'perro', 'hembra', 2014-10-07, 'Gris', null, 'en_atencion', 48, null
+  75, null, 'gato', 'hembra', 2016-03-21, 'Gris', 'Ojos de distinto color', 'en_hogar_temporal', 75, null
+  77, 'Tizón', 'perro', 'hembra', 2018-06-12, 'Naranja', 'Cola cortada', 'en_hogar_temporal', 77, null
+  113, null, 'perro', 'macho', null, 'Manchado', 'Cola cortada', 'disponible_adopcion', 113, null
+  137, 'Trueno', 'otro', 'macho', null, 'Negro', null, 'en_hogar_temporal', 137, null
+  140, 'Osito', 'otro', 'hembra', 2015-05-24, 'Negro', 'Mancha en el ojo', 'disponible_adopcion', 140, null
+  170, 'Rufo', 'perro', 'hembra', 2016-05-03, null, 'Cola cortada', 'en_atencion', 170, null
+  186, 'Nube', 'gato', 'macho', null, 'Manchado', null, 'en_atencion', 186, null
+  194, null, 'perro', 'hembra', 2014-04-08, 'Gris', null, 'adoptado', 194, 11
+  222, 'Osito', 'gato', 'hembra', null, 'Naranja', null, 'adoptado', 222, null
+  252, null, 'gato', 'macho', 2022-02-14, 'Blanco', null, 'adoptado', 252, null
+  281, null, 'gato', 'hembra', 2020-03-02, 'Café', null, 'adoptado', 281, null
+  315, null, 'perro', 'hembra', 2017-04-13, 'Naranja', null, 'adoptado', 315, null
+  321, 'Gordo', 'gato', 'macho', 2020-05-23, 'Tricolor', null, 'adoptado', 321, null
+  346, 'Michi', 'otro', 'macho', 2020-03-11, 'Gris', 'Cola cortada', 'disponible_adopcion', 346, null
+  348, 'Rufo', 'gato', 'macho', 2024-04-11, 'Manchado', 'Pelo largo', 'adoptado', 348, null
+  350, 'Michi', 'otro', 'hembra', 2019-11-26, 'Atigrado', 'Manchas blancas en las patas', 'en_hogar_temporal', 350, null
+  354, 'Tizón', 'gato', 'macho', 2018-07-30, 'Tricolor', 'Oreja caída', 'disponible_adopcion', 354, null
+  374, null, 'otro', 'hembra', 2020-04-24, 'Naranja', 'Cicatriz en el lomo', 'en_atencion', 374, null
+  391, 'Tizón', 'perro', 'macho', 2024-07-27, 'Negro', null, 'disponible_adopcion', 391, null
+  400, 'Trueno', 'otro', 'hembra', 2017-06-05, 'Manchado', 'Cicatriz en el lomo', 'adoptado', 400, null
+  406, 'Mishi', 'otro', 'macho', null, 'Café', 'Cola cortada', 'adoptado', 406, null
+  422, 'Coco', 'otro', 'hembra', 2024-04-03, 'Beige', 'Pelo largo', 'adoptado', 15, null
+  424, 'Nube', 'gato', 'macho', 2018-04-16, 'Blanco', 'Collar rojo', 'adoptado', 160, null
+  443, 'Rocky', 'otro', 'macho', null, 'Naranja', null, 'adoptado', 279, null
+  466, 'Tizón', 'gato', 'hembra', null, 'Tricolor', null, 'fallecido', 315, null
+}
+
+atencion_medica = { id_animal:number, num_atencion:number, fecha:date, tipo:string, observaciones:string, id_persona:number, id_clinica:number
+  11, 2, 2025-12-13, 'tratamiento', null, 340, 21
+  11, 4, 2026-05-24, 'vacunacion', 'Evolución favorable', 355, 9
+  11, 5, 2026-08-07, 'tratamiento', 'Evolución favorable', 339, 16
+  24, 1, 2025-10-20, 'cirugia', null, 348, 25
+  24, 2, 2026-02-02, 'tratamiento', 'Evolución favorable', null, 3
+  32, 5, 2026-10-25, 'vacunacion', 'Evolución favorable', 340, 10
+  75, 1, 2024-10-27, 'cirugia', 'Evolución favorable', 355, 7
+  75, 2, 2024-12-08, 'vacunacion', 'Evolución favorable', null, 3
+  75, 3, 2025-03-03, 'vacunacion', 'Evolución favorable', 340, 24
+  140, 1, 2025-03-17, 'cirugia', 'Evolución favorable', 339, 19
+  170, 2, 2026-02-23, 'cirugia', 'Evolución favorable', 340, 7
+  186, 3, 2025-05-30, 'cirugia', 'Evolución favorable', null, 20
+  194, 2, 2025-07-30, 'cirugia', null, 348, 7
+  194, 3, 2025-08-10, 'vacunacion', 'Evolución favorable', 352, 3
+  281, 2, 2024-10-14, 'cirugia', null, 331, null
+  315, 1, 2026-06-03, 'tratamiento', 'Evolución favorable', 343, 17
+  315, 2, 2026-07-19, 'tratamiento', null, null, 13
+  321, 2, 2025-09-18, 'vacunacion', 'Evolución favorable', null, 19
+  348, 3, 2026-03-17, 'cirugia', 'Evolución favorable', 332, 21
+  350, 5, 2025-09-04, 'vacunacion', null, 352, 20
+  354, 2, 2024-04-30, 'tratamiento', null, 355, null
+  354, 3, 2025-01-30, 'vacunacion', 'Evolución favorable', 355, 17
+  374, 1, 2026-07-05, 'vacunacion', 'Evolución favorable', 355, 11
+  391, 2, 2026-10-10, 'vacunacion', null, 339, 6
+  391, 4, 2026-10-27, 'tratamiento', 'Evolución favorable', null, null
+  391, 5, 2026-10-27, 'cirugia', 'Evolución favorable', null, null
+  422, 1, 2026-10-23, 'tratamiento', 'Evolución favorable', 339, 12
+  443, 3, 2025-12-21, 'tratamiento', 'Evolución favorable', null, 25
+  466, 2, 2026-06-01, 'tratamiento', 'Evolución favorable', 343, 6
+  466, 5, 2026-06-27, 'cirugia', null, 348, 11
+}
+
+cirugia = { id_animal:number, num_atencion:number, tipo_cirugia:string, complicaciones:string
+  24, 1, 'Limpieza de herida', null
+  75, 1, 'Esterilización', null
+  140, 1, 'Esterilización', null
+  170, 2, 'Esterilización', null
+  186, 3, 'Limpieza de herida', null
+  194, 2, 'Limpieza de herida', null
+  281, 2, 'Amputación', null
+  348, 3, 'Reducción de fractura', null
+  391, 5, 'Extracción dental', null
+  466, 5, 'Esterilización', null
+}
+
+clinica = { id_clinica:number, nombre:string, direccion:string, telefono:string, tipo:string
+  1, 'Hospital Veterinario Huellitas', 'Calle Durango 921, Col. Daniel Garza, Miguel Hidalgo', '5684521599', 'publica'
+  2, 'Clínica Veterinaria San Francisco', 'Eje Central 362, Col. San Francisco Tlaltenco, Tláhuac', '5594152464', 'universitaria'
+  3, 'Hospital Veterinario Patitas', 'Calle Durango 930, Col. San Jerónimo Lídice, La Magdalena Contreras', '5680102933', 'universitaria'
+  4, 'Clínica Veterinaria Del Valle', 'Eje Central 869, Col. Reforma Iztaccíhuatl, Iztacalco', '5521721733', 'universitaria'
+  5, 'Centro de Atención Animal Animalia', 'Av. Patriotismo 259, Col. Del Mar, Tláhuac', '5575209073', 'privada'
+  6, 'Clínica Veterinaria La Roma', 'Calle Zaragoza 842, Col. Juárez, Cuauhtémoc', '5627327262', 'privada'
+  7, 'Hospital Veterinario Mascotas Felices', 'Av. Universidad 771, Col. Granjas México, Iztacalco', '5513698351', 'asociacion_civil'
+  8, 'Hospital Veterinario Norte', 'Av. Río Churubusco 323, Col. Martín Carrera, Gustavo A. Madero', '5606912841', 'asociacion_civil'
+  9, 'Clínica Veterinaria Sur', 'Av. Chapultepec 665, Col. Roma Sur, Cuauhtémoc', '5505186043', 'publica'
+  10, 'Veterinaria Pedregal', 'Calle Zaragoza 642, Col. Tolteca, Álvaro Obregón', '5532191223', 'privada'
+  11, 'Hospital Veterinario Coyoacán', 'Av. Universidad 808, Col. Las Águilas, Álvaro Obregón', '5682820780', 'asociacion_civil'
+  12, 'Veterinaria Polanco', 'Av. Universidad 92, Col. Granjas México, Iztacalco', '5565569022', 'privada'
+  13, 'Hospital Veterinario Condesa', 'Calle Hidalgo 654, Col. Santa Cruz Atoyac, Benito Juárez', '5573221783', 'privada'
+  14, 'Clínica Veterinaria Satélite', 'Calzada Ermita Iztapalapa 953, Col. Condesa, Cuauhtémoc', '5626761081', 'asociacion_civil'
+  15, 'Hospital Veterinario Zaragoza', 'Av. Chapultepec 616, Col. Moctezuma 2a Sección, Venustiano Carranza', '5648695336', 'privada'
+  16, 'Clínica Veterinaria Tlalpan', 'Calle Juárez 930, Col. Gabriel Ramos Millán, Iztacalco', '5501353481', 'universitaria'
+  17, 'Veterinaria Narvarte', 'Av. Revolución 250, Col. Leyes de Reforma, Iztapalapa', '5664267845', 'privada'
+  18, 'Clínica Veterinaria Santa Fe', 'Calzada Ermita Iztapalapa 284, Col. Juventino Rosas, Iztacalco', '5674214308', 'privada'
+  19, 'Hospital Veterinario Lindavista', 'Calzada Ermita Iztapalapa 253, Col. Daniel Garza, Miguel Hidalgo', '5669508068', 'privada'
+  20, 'Centro de Atención Animal Portales', 'Av. Río Churubusco 11, Col. Granjas México, Iztacalco', '5540507284', 'privada'
+  21, 'Veterinaria Aragón', 'Av. Universidad 624, Col. San Antonio Tecómitl, Milpa Alta', '5570298923', 'universitaria'
+  22, 'Veterinaria Iztapalapa', 'Calle Juárez 670, Col. Del Mar, Tláhuac', '5540334314', 'privada'
+  23, 'Clínica Veterinaria Xochimilco', 'Av. Universidad 895, Col. San Mateo Tlaltenango, Cuajimalpa de Morelos', '5571189072', 'asociacion_civil'
+  24, 'Centro de Atención Animal Tacuba', 'Calle Durango 228, Col. Constitución de 1917, Iztapalapa', '5618778387', 'privada'
+  25, 'Centro de Atención Animal Centro', 'Calzada de Tlalpan 564, Col. San Ángel, Álvaro Obregón', '5520938637', 'asociacion_civil'
+}
+
+estancia = { id_animal:number, id_hogar:number, id_persona:number, fecha_inicio:date, fecha_fin:date, motivo_salida:string
+  21, 48, 63, 2026-02-28, 2026-07-23, 'Recuperación completa'
+  48, 28, 30, 2024-02-14, 2024-05-23, 'Fin del periodo acordado'
+  77, 3, 72, 2025-02-10, null, null
+  77, 49, 72, 2024-12-22, 2025-02-09, 'Recuperación completa'
+  137, 52, 52, 2024-11-13, null, null
+  140, 5, 53, 2024-12-04, 2025-04-14, 'Adopción'
+  170, 21, 52, 2025-08-08, 2025-12-20, 'Fin del periodo acordado'
+  170, 21, 52, 2025-12-23, 2026-04-27, 'Recuperación completa'
+  348, 37, 72, 2025-06-07, 2025-07-21, 'Adopción'
+  391, 28, 62, 2026-10-10, 2026-10-31, 'Adopción'
+}
+
+gato = { id_animal:number, resultado_fiv:boolean, resultado_felv:boolean
+  75, false, null
+  186, false, null
+  222, true, false
+  252, true, false
+  281, false, false
+  321, false, false
+  348, true, false
+  354, true, false
+  424, false, null
+  466, false, false
+}
+
+hogar_especie = { id_hogar:number, especie:string
+  4, 'gato'
+  5, 'perro'
+  5, 'gato'
+  5, 'otro'
+  14, 'perro'
+  14, 'otro'
+  21, 'otro'
+  48, 'otro'
+  49, 'gato'
+  52, 'otro'
+}
+
+hogar_temporal = { id_hogar:number, alias:string, calle:string, numero:string, cp:string, capacidad_max:number, activo:boolean, id_persona:number, id_zona:number
+  3, null, 'Calle Morelos', '754', '15973', 6, true, 144, 72
+  4, null, 'Av. Revolución', '815', '05128', 8, false, 144, 87
+  5, 'Hogar Miguel 5', 'Av. Revolución', 'S/N', '14528', 3, true, 63, 65
+  14, 'Hogar Alejandro 14', 'Calle Zaragoza', '171-B', '05495', 1, false, 10, 40
+  21, 'Hogar Iván 21', 'Av. Río Churubusco', 'S/N', '16429', 3, true, 297, 44
+  28, 'Hogar Jorge 28', 'Av. Patriotismo', '148', '12230', 4, true, 197, 61
+  37, 'Hogar Jorge 37', 'Calzada Ermita Iztapalapa', 'S/N', '09356', 1, true, 305, 76
+  48, null, 'Av. Patriotismo', '399', '02496', 1, true, 240, 56
+  49, null, 'Eje Central', 'S/N', '13078', 1, true, 240, 93
+  52, 'Hogar Emilio 52', 'Av. Río Churubusco', '929', '04110', 6, true, 85, 26
+  53, 'Hogar Mauricio 53', 'Calle Durango', '77-A', '16863', 6, true, 345, 32
+}
+
+otro = { id_animal:number, descripcion_especie:string, cuidados_especiales:string
+  32, 'Pato', null
+  137, 'Pato', null
+  140, 'Pato', null
+  346, 'Tortuga', null
+  350, 'Conejo', 'Heno y espacio para saltar'
+  374, 'Hámster', null
+  400, 'Pato', null
+  406, 'Paloma', 'Revisión de alas'
+  422, 'Paloma', 'Revisión de alas'
+  443, 'Paloma', 'Revisión de alas'
+}
+
+perro = { id_animal:number, tamano:string, nivel_energia:string, apto_con_ninos:boolean
+  11, 'mediano', 'alto', true
+  21, 'mediano', 'medio', true
+  24, 'mediano', 'bajo', true
+  48, 'grande', 'alto', false
+  77, 'mediano', 'bajo', true
+  113, 'chico', 'alto', true
+  170, 'mediano', 'bajo', true
+  194, 'chico', 'bajo', true
+  315, 'chico', 'bajo', true
+  391, 'chico', 'bajo', true
+}
+
+persona = { id_persona:number, nombres:string, ap_paterno:string, ap_materno:string, telefono:string, correo:string, fecha_registro:date
+  1, 'Javier', 'Medina', 'Herrera', '5556864978', 'javier.medina1@example.com', 2024-10-14
+  8, 'Alicia', 'Morales', null, '5605898607', 'alicia.morales8@example.com', 2024-08-21
+  10, 'María', 'Castillo', 'Medina', '5615437182', 'maria.castillo10@example.com', 2025-03-17
+  30, 'Fernanda', 'Vázquez', 'Díaz', '5667968445', 'fernanda.vazquez30@example.com', 2026-02-11
+  52, 'Rodrigo', 'Reyes', 'Chávez', '5697473720', 'rodrigo.reyes52@example.com', 2025-05-03
+  53, 'Carmen', 'Rivera', 'López', '5574051341', 'carmen.rivera53@example.com', 2026-08-07
+  62, 'Pablo', 'Gómez', 'Reyes', '5557134268', 'pablo.gomez62@example.com', 2024-02-01
+  63, 'Carlos Fernanda', 'Rivera', 'López', '5689542708', 'carlos.rivera63@example.com', 2025-11-20
+  72, 'Javier Isabel', 'Salazar', 'López', '5584732447', 'javier.salazar72@example.com', 2023-12-29
+  85, 'Carlos', 'Flores', 'Juárez', '5557921670', 'carlos.flores85@example.com', 2024-07-09
+  106, 'Ana', 'Castillo', 'Rodríguez', '5502939766', 'ana.castillo106@example.com', 2024-09-07
+  110, 'Fernando Carlos', 'Chávez', 'García', '5537348797', 'fernando.chavez110@example.com', 2024-12-21
+  144, 'Emilio del Carmen', 'Ramos', null, '5528831329', 'emilio.ramos144@example.com', 2025-04-13
+  158, 'Javier', 'Ramírez', 'Guerrero', '5520703034', 'javier.ramirez158@example.com', 2025-10-06
+  194, 'Iván', 'Cortés', 'García', '5624327743', 'ivan.cortes194@example.com', 2024-12-19
+  197, 'Sergio', 'Martínez', 'Domínguez', '5506007421', 'sergio.martinez197@example.com', 2025-11-08
+  240, 'Daniela', 'Vázquez', 'Vázquez', '5562823125', 'daniela.vazquez240@example.com', 2023-12-09
+  250, 'Carlos', 'Torres', 'Ramos', '5582727721', 'carlos.torres250@example.com', 2025-01-31
+  297, 'Raúl', 'Ruiz', 'Vázquez', '5596608454', 'raul.ruiz297@example.com', 2026-06-20
+  305, 'Fernando', 'Torres', 'Rivera', '5585121961', 'fernando.torres305@example.com', 2026-04-01
+  331, 'Paola', 'Jiménez', 'Hernández', '5676030987', 'paola.jimenez331@example.com', 2023-12-18
+  332, 'Eduardo', 'Torres', 'Cruz', '5541303343', 'eduardo.torres332@example.com', 2026-03-01
+  339, 'Fernanda Fernanda', 'Romero', 'Domínguez', '5513336444', 'fernanda.romero339@example.com', 2024-03-07
+  340, 'Rosa Luis', 'García', 'Sánchez', '5675227570', 'rosa.garcia340@example.com', 2024-03-26
+  343, 'Laura', 'Ruiz', 'Vega', '5656016135', 'laura.ruiz343@example.com', 2023-12-12
+  345, 'Raúl', 'Torres', 'Rivera', '5514497658', 'raul.torres345@example.com', 2025-02-11
+  348, 'Alicia', 'Ruiz', 'Rodríguez', '5646692522', 'alicia.ruiz348@example.com', 2023-12-04
+  352, 'Fernanda', 'Chávez', 'Silva', '5695491171', 'fernanda.chavez352@example.com', 2026-03-09
+  353, 'Emilio', 'Rodríguez', 'Mendoza', '5583423233', 'emilio.rodriguez353@example.com', 2025-04-08
+  355, 'Jorge', 'Chávez', 'Torres', '5606508606', null, 2025-09-09
+}
+
+rescate = { id_rescate:number, descripcion_lugar:string, fecha_hora:string, condicion_inicial:string, tipo_ingreso:string, id_zona:number
+  11, 'Esquina, colonia Pedregal de Santo Domingo', '2025-10-11 08:42:45', 'Con fiebre', 'rescate_en_calle', 25
+  15, 'Esquina, colonia Del Carmen', '2026-01-23 19:44:44', 'Deshidratado', 'reporte_ciudadano', 23
+  21, 'Afuera de una escuela, colonia Tacuba', '2026-02-26 21:08:29', 'Cachorro abandonado', 'rescate_en_calle', 61
+  24, 'Mercado, colonia San Jerónimo Lídice', '2025-05-25 14:56:15', 'Herido', 'reporte_ciudadano', 87
+  32, 'Parque, colonia Gabriel Ramos Millán', '2026-04-25 14:19:39', 'Con sarna', 'reporte_ciudadano', 76
+  48, 'Afuera de una escuela, colonia Pueblo Nuevo Alto', '2024-02-13 12:35:42', 'Herido', 'reporte_ciudadano', 89
+  75, 'Estacionamiento, colonia Villa Milpa Alta', '2024-10-03 12:07:17', 'Con parásitos', 'entrega_voluntaria', 93
+  77, 'Bajo el puente, colonia Peñón de los Baños', '2024-12-21 13:41:43', 'Con fractura', 'reporte_ciudadano', 73
+  113, 'Bajo el puente, colonia Tlalpan Centro', '2026-03-18 06:14:05', 'Cachorro abandonado', 'entrega_voluntaria', 53
+  137, 'Mercado, colonia Santa María la Ribera', '2024-11-12 15:31:09', 'Cachorro abandonado', 'rescate_en_calle', 10
+  140, 'Estación del Metro, colonia Juárez', '2024-11-30 13:21:29', 'Con parásitos', 'reporte_ciudadano', 5
+  160, 'Bajo el puente, colonia Martín Carrera', '2025-03-07 22:07:37', 'Desnutrido', 'entrega_voluntaria', 43
+  164, 'Esquina, colonia Copilco El Alto', '2026-07-11 12:59:02', 'Atropellado', 'rescate_en_calle', 26
+  170, 'Camellón, colonia Insurgentes Mixcoac', '2025-08-08 22:19:31', 'Con fiebre', 'rescate_en_calle', 22
+  186, 'Terreno baldío, colonia Pedregal de San Nicolás', '2024-08-04 16:00:27', 'Con sarna', 'rescate_en_calle', 54
+  194, 'Terreno baldío, colonia Peñón de los Baños', '2025-03-29 19:38:34', 'Deshidratado', 'rescate_en_calle', 73
+  222, 'Estacionamiento, colonia Pedregal de San Nicolás', '2024-11-09 15:02:14', 'Cachorro abandonado', 'entrega_voluntaria', 54
+  252, 'Afuera de una escuela, colonia Martín Carrera', '2024-02-27 16:42:36', 'Cachorro abandonado', 'rescate_en_calle', 43
+  279, 'Bajo el puente, colonia Narvarte Oriente', '2024-11-29 21:57:13', 'Sano', 'reporte_ciudadano', 16
+  281, 'Bajo el puente, colonia Tabacalera', '2024-01-02 20:55:12', 'Atropellado', 'rescate_en_calle', 12
+  315, 'Esquina, colonia Tlalpan Centro', '2026-05-10 06:26:15', 'Cachorro abandonado', 'rescate_en_calle', 53
+  321, 'Terreno baldío, colonia Del Valle Centro', '2024-12-24 11:42:42', 'Con sarna', 'reporte_ciudadano', 14
+  346, 'Mercado, colonia Portales Norte', '2023-12-24 13:28:00', 'Sano', 'reporte_ciudadano', 17
+  348, 'Parque, colonia Reforma Iztaccíhuatl', '2025-06-02 07:29:46', 'Deshidratado', 'entrega_voluntaria', 79
+  350, 'Estación del Metro, colonia Copilco El Alto', '2024-09-19 14:41:21', 'Desnutrido', 'entrega_voluntaria', 26
+  354, 'Barranca, colonia Roma Norte', '2024-01-27 21:50:30', 'Con fractura', 'rescate_en_calle', 2
+  374, 'Parque, colonia Industrial', '2026-02-28 12:30:28', 'Desnutrido', 'reporte_ciudadano', 42
+  391, 'Afuera de una escuela, colonia Santa María la Ribera', '2026-10-10 21:28:22', 'Atropellado', 'reporte_ciudadano', 10
+  400, 'Afuera de una escuela, colonia San Bernabé Ocotepec', '2025-10-01 06:10:03', 'Atropellado', 'rescate_en_calle', 88
+  406, 'Mercado, colonia Industrial', '2025-04-10 17:53:11', 'Con fiebre', 'rescate_en_calle', 42
+}
+
+rescate_rescatista = { id_rescate:number, id_persona:number
+  21, 63
+  48, 30
+  77, 72
+  137, 52
+  137, 62
+  140, 53
+  164, 1
+  170, 52
+  348, 72
+  391, 62
+}
+
+rescatista = { id_persona:number, vehiculo_propio:boolean, disponibilidad:string
+  1, false, 'Noches'
+  8, false, 'Solo urgencias'
+  10, false, 'Noches'
+  30, true, 'Solo urgencias'
+  52, true, 'Entre semana por la tarde'
+  53, false, 'Fines de semana'
+  62, false, 'Entre semana por la tarde'
+  63, false, 'Entre semana por la tarde'
+  72, false, 'Cualquier día'
+  85, false, 'Noches'
+}
+
+seguimiento = { id_animal:number, id_persona:number, fecha_adopcion:date, num_seguimiento:number, fecha:date, medio:string, estado_del_animal:string, observaciones:string
+  194, 158, 2025-08-17, 1, 2025-09-22, 'mensaje', 'Bien adaptado y sano', null
+  348, 158, 2025-12-13, 1, 2025-12-29, 'mensaje', 'Requiere revisión veterinaria', null
+  348, 158, 2025-12-13, 2, 2026-01-14, 'visita', 'Bien adaptado y sano', 'El adoptante envió fotos'
+  348, 158, 2025-12-13, 3, 2026-02-02, 'mensaje', 'Come bien, pero tímido', null
+  422, 106, 2026-02-13, 1, 2026-03-10, 'videollamada', 'Aumentó de peso', null
+  422, 106, 2026-02-13, 2, 2026-04-15, 'mensaje', 'Bien adaptado y sano', null
+  422, 106, 2026-02-13, 3, 2026-05-01, 'mensaje', 'Aumentó de peso', 'El adoptante envió fotos'
+  422, 106, 2026-02-13, 4, 2026-06-11, 'videollamada', 'Muy activo y juguetón', null
+  424, 158, 2025-06-22, 1, 2025-07-14, 'mensaje', 'Come bien, pero tímido', 'Sin novedades'
+  424, 158, 2025-06-22, 2, 2025-08-11, 'videollamada', 'Muy activo y juguetón', null
+}
+
+solicitud_adopcion = { id_animal:number, id_persona:number, fecha_solicitud:date, estado:string, observaciones:string
+  32, 197, 2026-08-05, 'pendiente', null
+  194, 158, 2025-07-27, 'aprobada', null
+  222, 250, 2025-01-07, 'aprobada', null
+  281, 110, 2024-01-28, 'aprobada', null
+  281, 250, 2024-05-14, 'aprobada', null
+  321, 250, 2025-06-03, 'aprobada', null
+  348, 158, 2025-11-06, 'aprobada', null
+  422, 106, 2026-01-24, 'aprobada', null
+  424, 158, 2025-06-10, 'aprobada', null
+  443, 194, 2025-02-26, 'aprobada', null
+}
+
+tratamiento = { id_animal:number, num_atencion:number, diagnostico:string, duracion_dias:number
+  11, 2, 'Sarna sarcóptica', 26
+  11, 5, 'Sarna sarcóptica', 40
+  24, 2, 'Conjuntivitis', 23
+  315, 1, 'Conjuntivitis', 7
+  315, 2, 'Desnutrición', 60
+  354, 2, 'Infección respiratoria', 24
+  391, 4, 'Conjuntivitis', 55
+  422, 1, 'Desnutrición', 45
+  443, 3, 'Sarna sarcóptica', 29
+  466, 2, 'Sarna sarcóptica', 32
+}
+
+vacuna = { id_vacuna:number, nombre:string, especie_destino:string, intervalo_refuerzo_dias:number
+  1, 'Rabia', 'perro', 365
+  2, 'Quíntuple canina', 'perro', 365
+  3, 'Séxtuple canina', 'perro', 365
+  4, 'Bordetella', 'perro', 180
+  5, 'Leptospirosis', 'perro', 365
+  6, 'Rabia', 'gato', 365
+  7, 'Triple felina', 'gato', 365
+  8, 'Leucemia felina', 'gato', 365
+  9, 'Cuádruple felina', 'gato', 365
+  10, 'Mixomatosis', 'otro', 180
+  11, 'Enfermedad hemorrágica viral del conejo', 'otro', 365
+  12, 'Newcastle (aves)', 'otro', null
+}
+
+vacunacion = { id_animal:number, num_atencion:number, dosis_num:number, fecha_proxima_dosis:date, id_vacuna:number
+  11, 4, 1, 2026-11-20, 4
+  32, 5, 1, 2027-10-25, 11
+  75, 2, 1, 2025-12-08, 7
+  75, 3, 1, 2026-03-03, 8
+  194, 3, 1, 2026-08-10, 3
+  321, 2, 1, 2026-09-18, 7
+  350, 5, 1, null, 12
+  354, 3, 1, 2026-01-30, 6
+  374, 1, 1, 2027-01-01, 10
+  391, 2, 1, 2027-04-08, 4
+}
+
+veterinario = { id_persona:number, cedula:string, especialidad:string
+  331, '47355611', 'Cirugía'
+  332, '12378412', 'Medicina felina'
+  339, '15420329', 'Medicina felina'
+  340, '85230019', 'Cirugía'
+  343, '13886377', 'Dermatología'
+  345, '42726468', 'Medicina general'
+  348, '73097784', 'Animales exóticos'
+  352, '78920800', null
+  353, '74250183', 'Dermatología'
+  355, '52199514', 'Dermatología'
+}
+
+zona = { id_zona:number, colonia:string, municipio:string, entidad:string
+  2, 'Roma Norte', 'Cuauhtémoc', 'Ciudad de México'
+  5, 'Juárez', 'Cuauhtémoc', 'Ciudad de México'
+  10, 'Santa María la Ribera', 'Cuauhtémoc', 'Ciudad de México'
+  12, 'Tabacalera', 'Cuauhtémoc', 'Ciudad de México'
+  14, 'Del Valle Centro', 'Benito Juárez', 'Ciudad de México'
+  16, 'Narvarte Oriente', 'Benito Juárez', 'Ciudad de México'
+  17, 'Portales Norte', 'Benito Juárez', 'Ciudad de México'
+  22, 'Insurgentes Mixcoac', 'Benito Juárez', 'Ciudad de México'
+  23, 'Del Carmen', 'Coyoacán', 'Ciudad de México'
+  25, 'Pedregal de Santo Domingo', 'Coyoacán', 'Ciudad de México'
+  26, 'Copilco El Alto', 'Coyoacán', 'Ciudad de México'
+  32, 'San Miguel Teotongo', 'Iztapalapa', 'Ciudad de México'
+  40, 'Cuautepec de Madero', 'Gustavo A. Madero', 'Ciudad de México'
+  42, 'Industrial', 'Gustavo A. Madero', 'Ciudad de México'
+  43, 'Martín Carrera', 'Gustavo A. Madero', 'Ciudad de México'
+  44, 'Providencia', 'Gustavo A. Madero', 'Ciudad de México'
+  53, 'Tlalpan Centro', 'Tlalpan', 'Ciudad de México'
+  54, 'Pedregal de San Nicolás', 'Tlalpan', 'Ciudad de México'
+  56, 'Fuentes del Pedregal', 'Tlalpan', 'Ciudad de México'
+  61, 'Tacuba', 'Miguel Hidalgo', 'Ciudad de México'
+  65, 'Observatorio', 'Miguel Hidalgo', 'Ciudad de México'
+  70, 'Del Gas', 'Azcapotzalco', 'Ciudad de México'
+  72, 'Moctezuma 2a Sección', 'Venustiano Carranza', 'Ciudad de México'
+  73, 'Peñón de los Baños', 'Venustiano Carranza', 'Ciudad de México'
+  76, 'Gabriel Ramos Millán', 'Iztacalco', 'Ciudad de México'
+  79, 'Reforma Iztaccíhuatl', 'Iztacalco', 'Ciudad de México'
+  87, 'San Jerónimo Lídice', 'La Magdalena Contreras', 'Ciudad de México'
+  88, 'San Bernabé Ocotepec', 'La Magdalena Contreras', 'Ciudad de México'
+  89, 'Pueblo Nuevo Alto', 'La Magdalena Contreras', 'Ciudad de México'
+  93, 'Villa Milpa Alta', 'Milpa Alta', 'Ciudad de México'
+}
