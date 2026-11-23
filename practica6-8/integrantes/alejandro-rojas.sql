@@ -1,5 +1,5 @@
 -- Trabajo individual — Alejandro Rojas
--- Base: HuellaRed (esquema public), cargada con base/huellared/datos/generar_datos.py (semilla 20261105).
+-- Datos: muestra del grupo RelaX. Ejecutar antes practica6-8/relax/muestra.sql en la misma sesión y consultar sin "public.".
 -- Tres consultas de lectura. La consulta 2 usa reunión externa izquierda.
 -- Expresiones, resultados y evidencias en alejandro-rojas.md.
 
