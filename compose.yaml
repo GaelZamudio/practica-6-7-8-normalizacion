@@ -1,6 +1,5 @@
 # Responsable: Gael
 # Ejercicio: Parte 3: entorno reproducible
-# Qué completar: Mantener este archivo coherente con las rutas, dependencias y el arranque final. Documentar únicamente resultados comprobados.
 
 name: huellared-p678
 services:
@@ -22,8 +21,10 @@ services:
       start_period: 10s
     restart: unless-stopped
   inicializar:
+    image: huellared-p678-tareas
     build: .
     environment:
+      SISMOS_DB: ${SISMOS_DB:-sismos}
       PGHOST: postgres
       POSTGRES_PORT: "5432"
       POSTGRES_DB: ${POSTGRES_DB:-huellared}
@@ -36,6 +37,22 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    restart: "no"
+  consultas:
+    image: huellared-p678-tareas
+    build: .
+    environment:
+      PGHOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB:-huellared}
+      SISMOS_DB: ${SISMOS_DB:-sismos}
+      HUELLARED_CONSULTA_PASSWORD: ${HUELLARED_CONSULTA_PASSWORD:-p678_consulta_demo}
+    volumes:
+      - ./salida:/app/salida
+    command: ["python", "docker/ejecutar_consultas.py"]
+    depends_on:
+      inicializar:
+        condition: service_completed_successfully
     restart: "no"
 volumes:
   postgres_data:
