@@ -1,6 +1,5 @@
 # Responsable: Gael
 # Ejercicio: Parte 3: entorno reproducible
-# Qué completar: Mantener este archivo coherente con las rutas, dependencias y el arranque final. Documentar únicamente resultados comprobados.
 
 .env
 .env.*
@@ -11,3 +10,6 @@ __pycache__/
 data/
 base/huellared/datos/generados/
 # practica6-8/relax/grupo.txt must be tracked when generated.
+
+# Regenerated reports and exports, not source files.
+salida/

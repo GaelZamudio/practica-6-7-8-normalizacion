@@ -30,22 +30,20 @@ El archivo no modifica public. Las tablas temporales desaparecen al cerrar la co
 
 ## Regenerar
 
-Desde la raíz del repositorio:
+El comando completo de la Parte 3 es:
 
 ```powershell
-docker compose up -d --build
-docker compose logs inicializar
+docker compose run --build --rm consultas
 ```
 
-El inicializador prepara esquema, dominios y roles, carga si hace falta, aplica 002–003 y exporta el grupo. La carpeta relax está montada en el contenedor para guardar los archivos resultantes en el repo. El servicio inicializar termina con código 0 si todo concluye bien.
+Prepara las bases, ejecuta las consultas y exporta el grupo desde PostgreSQL a `salida/relax/`. El grupo versionado de esta carpeta se conserva para que las consultas y capturas sigan usando la misma muestra. El resultado informa si la selección regenerada coincide con la versionada. No reemplazar la muestra compartida sin actualizar conjuntamente comparaciones y evidencias.
 
-Para exportar otra vez con la base ya preparada:
+Con la base ya preparada, para exportar únicamente el grupo:
 
 ```powershell
-docker compose run --rm --no-deps inicializar python practica6-8/relax/exportar-grupo.py
+docker compose run --rm --no-deps consultas python practica6-8/relax/exportar-grupo.py --destino /app/salida/relax
 ```
 
-Alternativamente, con las dependencias de requirements.txt instaladas y PostgreSQL accesible, ejecutar `python practica6-8/relax/exportar-grupo.py`. Lee .env y permite PGHOST, POSTGRES_PORT, POSTGRES_DB, PGUSER y PGPASSWORD; por defecto consulta como huellared_consulta usando las credenciales públicas de demostración. No se requiere acceso de escritura a PostgreSQL.
 
 ## Selección y representación
 

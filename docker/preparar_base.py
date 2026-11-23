@@ -1,8 +1,7 @@
 # Responsable: Gael
 # Ejercicio: Parte 3: entorno reproducible
-# Qué completar: Mantener este archivo coherente con las rutas, dependencias y el arranque final. Documentar únicamente resultados comprobados.
 
-"""Load the inherited baseline and apply the numbered normalization migrations."""
+"""Prepare HuellaRed, apply normalization migrations and load the assigned warehouse."""
 import hashlib
 import os
 import re
@@ -11,6 +10,7 @@ import subprocess
 import sys
 import psycopg
 from inicializar import preparar
+from cargar_sismos import main as cargar_sismos
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -62,8 +62,9 @@ def main():
                          ('huellared_p45',))
             print('Baseline load recorded.')
     migrar_normalizacion()
-    subprocess.run([sys.executable, str(ROOT / 'practica6-8/relax/exportar-grupo.py')], check=True)
-    print('HuellaRed ready; normalization migrated and RelaX group exported. Part 2 queries are pending.')
+    cargar_sismos()
+    print('Bases preparadas; el servicio consultas ejecutará la Parte 2 y regenerará el grupo.')
+
 
 if __name__ == '__main__':
     main()
