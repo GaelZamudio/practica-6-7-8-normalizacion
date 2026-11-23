@@ -9,7 +9,7 @@
 | **Alejandro** | Proyecto asignado: **2.3**, tres consultas existentes de sismos traducidas a álgebra con sus árboles y explicación.|
 | **Cada integrante** | Tres consultas individuales propias y explicación personal de una descomposición de la Parte 1. |
 
-Para el trabajo individual de José y Alejandro: se preparará sobre HuellaRed cuando Gael entregue el esquema y grupo de RelaX definitivos.
+Para el trabajo individual de José y Alejandro: usar el esquema operativo de HuellaRed y la misma versión de `practica6-8/relax/grupo.txt`, siguiendo su README.
 
 ## Ramas y Pull Requests — obligatorio
 
@@ -115,7 +115,7 @@ No es necesario desplegar PHP ni modificar las tablas para traducir estas consul
 
 ## Trabajo individual de los tres integrantes
 
-Cada persona escribe su propia entrega cuando esté disponible la muestra definitiva de HuellaRed. Se entrega dentro de la misma rama de trabajo de cada responsable; José y Alejandro usan `proyecto-asignado` también para estos archivos.
+Cada persona escribe su propia entrega sobre la muestra compartida de HuellaRed en `practica6-8/relax/grupo.txt`. Se entrega dentro de la misma rama de trabajo de cada responsable; José y Alejandro usan `proyecto-asignado` también para estos archivos.
 
 | Autor | Documento | SQL |
 |---|---|---|
@@ -124,6 +124,8 @@ Cada persona escribe su propia entrega cuando esté disponible la muestra defini
 | José | `practica6-8/integrantes/jose.md` | `practica6-8/integrantes/jose.sql` |
 
 Cada entrega contiene tres consultas propias, distintas de las del equipo, al menos una con división o reunión externa. Cada consulta incluye pregunta, álgebra, captura de RelaX con árbol y resultado, SQL y comprobación sobre los mismos datos. Reservar las preguntas con Gael para evitar repeticiones.
+Las preguntas individuales de Gael quedan en [GaelZamudio.md](practica6-8/integrantes/GaelZamudio.md): clínicas sin atenciones en la muestra, animales con vacunación y cirugía, y rescatistas con al menos dos rescates. Sus consultas están verificadas y las capturas de RelaX están enlazadas en su documento.
+
 Además, explicar con palabras propias una descomposición de la Parte 1. Firmar el documento y prepararse para modificar una consulta en clase.
 Capturas en `practica6-8/evidencias/integrantes/<nombre-del-archivo-sin-extension>/`, enlazadas con rutas relativas.
 
@@ -132,24 +134,26 @@ Capturas en `practica6-8/evidencias/integrantes/<nombre-del-archivo-sin-extensio
 HuellaRed procede de https://github.com/GaelZamudio/practica-4-y-5-implementacion,
 `base/huellared/` conserva esquema, migración 001, generador, cargadores y roles. Los cambios nuevos al modelo se harán mediante migraciones numeradas después de cargar los datos, no reescribiendo el esquema inicial.
 
-Gael creará los entregables cuando exista contenido real: `practica6-8/normalizacion.md`, `practica6-8/algebra.md`, migraciones justificadas, consultas de HuellaRed, exportador y grupo RelaX. 
-También implementará la carga automática de sismos y la ejecución final de consultas. El análisis formal de equivalencia de F con otro equipo pertenece al 1.2 de Gael.
+El análisis 1.1–1.3 está en [normalizacion.md](practica6-8/normalizacion.md); el intercambio externo de F sigue pendiente. Las migraciones 002 y 003 construyen y normalizan una instantánea didáctica de rescates y zonas en el esquema `normalizacion`, conservando las 23 tablas operativas de `public`. Esa descomposición está disponible para la explicación individual. El exportador y el grupo RelaX están en `practica6-8/relax/`. Las 13 consultas del equipo están documentadas en [algebra.md](practica6-8/algebra.md), con SQL y resultados en `practica6-8/consultas/huellared/`. Se comprobaron sobre la muestra compartida y las capturas de RelaX están enlazadas en cada consulta. Las entregas de los compañeros se incorporarán desde sus ramas; comprobar su estado después del merge.
+La Parte 3 carga sismos automáticamente y ejecuta las consultas mediante el servicio `consultas`; véase el README. Las expresiones y entregas pendientes se incorporan al fusionar las ramas de sus responsables. El análisis formal de equivalencia de F con otro equipo pertenece al 1.2 de Gael.
 
-## Arranque básico disponible
+## Arranque de la Parte 3
 
 ```powershell
-docker compose up -d --build
-docker compose ps -a
-docker compose logs inicializar
+docker compose run --build --rm consultas
 ```
 
-Actualmente Compose solo prepara HuellaRed: esquema, 001, roles y carga sintética con marca de finalización. Usa PostgreSQL 17, base `huellared`, puerto local 5434 y volumen nombrado separado. Las credenciales públicas de prueba están en `.env.example`; no se necesita crear `.env` para los valores por defecto.
-`inicializar` debe terminar con código 0 y PostgreSQL permanecer saludable. Este arranque aún no está validado en un clon limpio; las comprobaciones realizadas hasta ahora son de configuración y sintaxis.
-Los SQL originales de sismos son entradas para su futura carga: no ejecutarlos repetidamente sobre una base ya poblada, porque pueden duplicar registros o fallar.
+El inicializador prepara HuellaRed, sus migraciones y la base separada de sismos. Después, `consultas` muestra preguntas, álgebra y resultados SQL, y regenera el grupo desde PostgreSQL. Los CSV, el resumen y el grupo regenerado se guardan en `salida/`, sin sobrescribir la muestra de las capturas. Se conservan los datos en un volumen nombrado. Los detalles, las credenciales de prueba y el estado de validación están en [README.md](README.md).
+
+Mantener cada documento sincronizado con el orden de consultas de su SQL. El ejecutor descubre los archivos individuales al integrarlos; una plantilla no se cuenta como trabajo terminado. Para el álgebra, usar bloques de código sin lenguaje o con lenguaje `text` o `relalg`, dentro del apartado de la consulta correspondiente.
 
 ## Cierre de la entrega
 
-- Gael debe volver a crear el **README en inglés** antes de entregar: comando único y salida esperada al inicio, instrucciones y declaración del uso de IA. Se retiró temporalmente durante la limpieza.
+- El README en inglés contiene el comando único, la salida esperada y la declaración de uso de IA; actualizar su validación tras integrar las ramas.
 - José hará la prueba desde un clon nuevo una vez completada la integración; registrará fecha, commit exacto, comando y resultado real en el README final.
 
 - Uso de IA hasta ahora: Codex ayudó a preparar la estructura, la automatización inicial y la extracción de consultas. 
+
+## Grupo compartido de RelaX — ejercicio 2.1
+
+El exportador y las instrucciones están en [practica6-8/relax/README.md](practica6-8/relax/README.md). El archivo `grupo.txt` contiene la muestra común de HuellaRed para las consultas del equipo y las individuales. José y Alejandro deben usar la misma versión; `muestra.sql` permite comparar los resultados en una sesión de pgAdmin con tablas temporales. No editar los datos a mano ni comparar contra las tablas completas de public. Gael integra y regenera la muestra; la explicación individual de la descomposición sigue en normalizacion.md.
