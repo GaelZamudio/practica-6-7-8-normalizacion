@@ -1,11 +1,12 @@
 # Trabajo individual — Alejandro Rojas
 
 **Autor:** Alejandro Rojas.  
-**Estado:** consultas, álgebra, SQL y explicación completos; resultados SQL comprobados en HuellaRed. Capturas de RelaX
-pendientes del grupo definitivo de Gael.
+**Estado:** completo; consultas comprobadas en RelaX y en SQL con la misma muestra.
 
 **Archivo SQL:** [alejandro-rojas.sql](alejandro-rojas.sql).  
-**Base:** HuellaRed, esquema `public`, cargada con el generador del repositorio (semilla 20261105, 7,205 filas).
+**Datos:** muestra de HuellaRed del grupo RelaX de Gael ([grupo.txt](../relax/grupo.txt), 23 tablas, 348 filas). El SQL
+se comprobó con [muestra.sql](../relax/muestra.sql), que crea tablas temporales con exactamente las mismas filas, y
+consultando sin el prefijo `public.`. Los resultados describen la muestra, no la base completa.
 Preguntas enviadas a Gael para reservarlas y no repetir las del equipo. La consulta 2 usa **reunión externa**.
 
 ## Consulta 1 — Perros chicos disponibles para adopción
@@ -36,11 +37,12 @@ WHERE a.estado_actual = 'disponible_adopcion'
 ORDER BY a.id_animal;
 ```
 
-- **Captura de RelaX con árbol y resultado:** pendiente; se agregará en
-  [evidencias/integrantes/alejandro-rojas/](../evidencias/integrantes/alejandro-rojas/) cuando Gael publique el grupo RelaX.
-- **Resultado SQL:** 12 perros: 62, 102, 113, 147, 155, 164, 168, 232, 308, 317, 391 y 460. Siete no tienen nombre
-  registrado (`NULL`), porque el nombre es opcional.
-- **Comparación con RelaX:** pendiente; debe coincidir con los mismos datos.
+- **Captura de RelaX con árbol y resultado:**
+
+![Consulta 1 — RelaX](../evidencias/integrantes/alejandro-rojas/01-relax.png)
+- **Resultado y comparación:** RelaX y SQL devuelven las mismas 2 filas: el perro 113 (sin nombre registrado, `NULL`)
+  y el 391, Tizón. En la muestra hay 4 perros chicos, pero 194 y 315 ya están adoptados. En la base completa la misma
+  consulta da 12 perros.
 
 ## Consulta 2 — Perros que nunca han sido vacunados
 
@@ -70,10 +72,12 @@ WHERE v.id_vacuna IS NULL
 ORDER BY a.id_animal;
 ```
 
-- **Captura de RelaX con árbol y resultado:** pendiente; misma carpeta de evidencias.
-- **Resultado SQL:** 88 de los 240 perros no tienen ninguna vacuna registrada. 19 de ellos están disponibles para
-  adopción.
-- **Comparación con RelaX:** pendiente.
+- **Captura de RelaX con árbol y resultado:**
+
+![Consulta 2 — RelaX](../evidencias/integrantes/alejandro-rojas/02-relax.png)
+- **Resultado y comparación:** RelaX y SQL devuelven las mismas 7 filas: 21 Toby, 24 Rocky, 48 Pelusa, 77 Tizón, 113
+  (sin nombre), 170 Rufo y 315 (sin nombre). De los 10 perros de la muestra, solo 11, 194 y 391 tienen vacunas. En la
+  base completa son 88 de 240 perros.
 
 ## Consulta 3 — Adoptantes con patio
 
@@ -101,13 +105,15 @@ WHERE d.tiene_patio = TRUE
 ORDER BY p.id_persona;
 ```
 
-- **Captura de RelaX con árbol y resultado:** pendiente; misma carpeta de evidencias.
-- **Resultado SQL:** 140 de los 260 adoptantes tienen patio: 77 viven en departamento, 45 en casa, 12 en vecindad y 6
-  en otro tipo de vivienda.
-- **Comparación con RelaX:** pendiente.
+- **Captura de RelaX con árbol y resultado:**
+
+![Consulta 3 — RelaX](../evidencias/integrantes/alejandro-rojas/03-relax.png)
+- **Resultado y comparación:** RelaX y SQL devuelven las mismas 6 filas: 85 Carlos Flores, 110 Fernando Carlos Chávez,
+  194 Iván Cortés, 197 Sergio Martínez, 250 Carlos Torres y 305 Fernando Torres. Cuatro viven en casa y dos en
+  departamento. En la base completa son 140 de 260 adoptantes.
 
 `ORDER BY` aparece solo en SQL para presentar el resultado ordenado. No cambia qué filas se devuelven, y en RelaX se
-omite.
+omite. En RelaX el filtro de la consulta 2 se escribe `id_vacuna = null`; en SQL, `IS NULL`.
 
 ## Explicación de una descomposición
 
@@ -145,9 +151,10 @@ transitividad.
 
 ## Defensa
 
-Modificaciones preparadas: en la consulta 1, si se cambia `'chico'` por `'grande'`, el resultado pasa de 12 a 17
-perros. En la consulta 2, si se cambia `⟕` por `⋈`, el resultado queda vacío, porque la reunión normal elimina justo a
-los perros sin vacunas. En la consulta 3, si se cambia `tiene_patio = true` por `false`, salen los otros 120
-adoptantes.
+Modificaciones preparadas, con los datos de la muestra: en la consulta 1, si se quita la condición de
+`disponible_adopcion`, el resultado pasa de 2 a 4 perros, porque entran los perros chicos ya adoptados (194 y 315). En
+la consulta 2, si se cambia `⟕` por `⨝`, el resultado queda vacío, porque la reunión normal elimina justo a los perros
+sin vacunas. En la consulta 3, si se cambia `tiene_patio = true` por `false`, salen los otros 4 adoptantes (106, 158,
+240 y 297).
 
 **Firma:** Alejandro Rojas.
