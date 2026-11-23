@@ -124,6 +124,8 @@ Cada persona escribe su propia entrega sobre la muestra compartida de HuellaRed 
 | José | `practica6-8/integrantes/jose.md` | `practica6-8/integrantes/jose.sql` |
 
 Cada entrega contiene tres consultas propias, distintas de las del equipo, al menos una con división o reunión externa. Cada consulta incluye pregunta, álgebra, captura de RelaX con árbol y resultado, SQL y comprobación sobre los mismos datos. Reservar las preguntas con Gael para evitar repeticiones.
+Las preguntas individuales de Gael quedan en [GaelZamudio.md](practica6-8/integrantes/GaelZamudio.md): clínicas sin atenciones en la muestra, animales con vacunación y cirugía, y rescatistas con al menos dos rescates. Sus consultas están verificadas y las capturas de RelaX están enlazadas en su documento.
+
 Además, explicar con palabras propias una descomposición de la Parte 1. Firmar el documento y prepararse para modificar una consulta en clase.
 Capturas en `practica6-8/evidencias/integrantes/<nombre-del-archivo-sin-extension>/`, enlazadas con rutas relativas.
 
@@ -132,7 +134,7 @@ Capturas en `practica6-8/evidencias/integrantes/<nombre-del-archivo-sin-extensio
 HuellaRed procede de https://github.com/GaelZamudio/practica-4-y-5-implementacion,
 `base/huellared/` conserva esquema, migración 001, generador, cargadores y roles. Los cambios nuevos al modelo se harán mediante migraciones numeradas después de cargar los datos, no reescribiendo el esquema inicial.
 
-El análisis 1.1–1.3 está en [normalizacion.md](practica6-8/normalizacion.md); el intercambio externo de F sigue pendiente. Las migraciones 002 y 003 construyen y normalizan una instantánea didáctica de rescates y zonas en el esquema `normalizacion`, conservando las 23 tablas operativas de `public`. Esa descomposición está disponible para la explicación individual. El exportador y el grupo RelaX están en `practica6-8/relax/`. Gael completará `practica6-8/algebra.md` y las consultas del equipo.
+El análisis 1.1–1.3 está en [normalizacion.md](practica6-8/normalizacion.md); el intercambio externo de F sigue pendiente. Las migraciones 002 y 003 construyen y normalizan una instantánea didáctica de rescates y zonas en el esquema `normalizacion`, conservando las 23 tablas operativas de `public`. Esa descomposición está disponible para la explicación individual. El exportador y el grupo RelaX están en `practica6-8/relax/`. Las 13 consultas del equipo están documentadas en [algebra.md](practica6-8/algebra.md), con SQL y resultados en `practica6-8/consultas/huellared/`. Se comprobaron sobre la muestra compartida y las capturas de RelaX están enlazadas en cada consulta. La entrega de Alejandro está integrada en sus archivos individuales y también tiene capturas pendientes.
 También implementará la carga automática de sismos y la ejecución final de consultas. El análisis formal de equivalencia de F con otro equipo pertenece al 1.2 de Gael.
 
 ## Arranque básico disponible
