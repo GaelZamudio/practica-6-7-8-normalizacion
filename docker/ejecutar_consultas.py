@@ -42,10 +42,8 @@ def connect(database):
                           password=os.environ["HUELLARED_CONSULTA_PASSWORD"], autocommit=True)
 
 
-def run_file(conn, path, records, label, report, pending):
+def run_file(conn, path, records, label, report):
     if not has_sql(path):
-        pending.append(f"{label}: SQL individual pendiente de integración")
-        print(f"PENDIENTE: {pending[-1]}", flush=True)
         return
     cur = conn.execute(path.read_text(encoding="utf-8-sig"))
     index = 0
@@ -57,8 +55,8 @@ def run_file(conn, path, records, label, report, pending):
             entry = dict(records[index-1])
             entry.update(archivo=path.relative_to(ROOT).as_posix(), consulta=index)
             if not entry["algebra"]:
-                pending.append(f"{label}/{index}: expresión algebraica pendiente de integración")
-            print(f"\n=== {label} / {index} ===\nPregunta: {entry['pregunta']}\nÁlgebra:\n{entry['algebra'] or 'PENDIENTE EN EL DOCUMENTO DEL RESPONSABLE'}", flush=True)
+                raise ValueError(f"{path.name}: cada consulta ejecutable debe incluir una expresión algebraica")
+            print(f"\n=== {label} / {index} ===\nPregunta: {entry['pregunta']}\nÁlgebra:\n{entry['algebra']}", flush=True)
             columns = [c.name for c in cur.description]
             print(" | ".join(columns), flush=True)
             name = label.replace("/", "-") + f"-{index:02d}.csv"
@@ -83,7 +81,7 @@ def main():
     # Un fallo no debe dejar un resumen anterior que parezca corresponder a esta ejecución.
     summary = OUTPUT / "resultados.json"
     summary.unlink(missing_ok=True)
-    report, pending = [], []
+    report = []
     with connect(os.environ["POSTGRES_DB"]) as conn:
         conn.execute((PRACTICA / "relax/muestra.sql").read_text(encoding="utf-8-sig"))
         conn.execute("SET default_transaction_read_only = on")
@@ -92,12 +90,12 @@ def main():
         if len(files) != 13 or len(records) != 13:
             raise ValueError("Se requieren las 13 consultas documentadas del ejercicio 2.2")
         for path, record in zip(files, records):
-            run_file(conn,path,[record],"huellared/"+path.stem,report,pending)
-        for path in sorted((PRACTICA / "integrantes").glob("*.sql")):
+            run_file(conn,path,[record],"huellared/"+path.stem,report)
+        for path in sorted((PRACTICA / "integrantes").glob("*.sql"), key=lambda p: p.name.casefold()):
             records = metadata(path.with_suffix(".md"))
             if has_sql(path) and len(records) != 3:
                 raise ValueError(f"{path.name}: se requieren tres consultas documentadas")
-            run_file(conn,path,records,"individual/"+path.stem,report,pending)
+            run_file(conn,path,records,"individual/"+path.stem,report)
     with connect(os.getenv("SISMOS_DB", "sismos")) as conn:
         conn.execute("SET default_transaction_read_only = on")
         records = metadata(PRACTICA / "algebra-sismos.md")
@@ -105,22 +103,20 @@ def main():
         if len(files) != 3 or len(records) != 3:
             raise ValueError("Se requieren las tres consultas documentadas de sismos")
         for path, record in zip(files, records):
-            run_file(conn,path,[record],"sismos/"+path.stem,report,pending)
+            run_file(conn,path,[record],"sismos/"+path.stem,report)
     subprocess.run([sys.executable, str(PRACTICA / "relax/exportar-grupo.py"),
                     "--destino", str(OUTPUT / "relax")], check=True)
-    original = (PRACTICA / "relax/grupo.txt").read_bytes()
-    generated = (OUTPUT / "relax/grupo.txt").read_bytes()
+    original = (PRACTICA / "relax/grupo.txt").read_text(encoding="utf-8-sig").encode("utf-8")
+    generated = (OUTPUT / "relax/grupo.txt").read_text(encoding="utf-8-sig").encode("utf-8")
     matches = original == generated
     print(f"Grupo regenerado desde PostgreSQL: salida/relax/grupo.txt. Igual al versionado: {matches}")
     if not matches:
         print("La selección regenerada difiere; las consultas usaron la muestra versionada de las capturas, que no se sobrescribió.")
-    result = dict(consultas=report, pendientes_de_integracion=pending,
+    result = dict(consultas=report,
                   grupo_consultado_sha256=hashlib.sha256(original).hexdigest(),
                   grupo_regenerado_sha256=hashlib.sha256(generated).hexdigest())
     summary.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    for item in pending:
-        print("PENDIENTE: " + item)
-    print(f"PARTE 3: {len(report)} consultas ejecutadas; {len(pending)} pendientes de integración. Fin sin errores SQL.")
+    print(f"PARTE 3: {len(report)} consultas ejecutadas. Fin sin errores SQL.")
 
 
 if __name__ == "__main__":

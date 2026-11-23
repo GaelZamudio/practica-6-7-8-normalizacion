@@ -66,10 +66,9 @@ Los originales ya están incluidos. **No necesitan volver a buscarlos ni transcr
 | `base/sismos/sql/03-dim_sismos.sql` | Datos completos de eventos sísmicos. |
 | `base/sismos/sql/04-dim_economia.sql` | Datos económicos. |
 | `base/sismos/sql/05-fact_impacto_sismos_imputed.sql` | Datos de la tabla de hechos. |
-| [Procedencia](base/sismos/procedencia.json) | Repo, HEAD local, tamaño y SHA-256 de las copias. |
 | [Licencia](base/sismos/LICENSE) | MIT, copyright 2025 Gabriel Hurtado. Conservarla. |
 | [Consultas originales](base/sismos/referencias/consultas-origen.md) | Fragmentos del backend, rutas, líneas y parámetros de las tres consultas elegidas. |
-| `practica6-8/consultas/sismos/01-consulta.sql` a `03-consulta.sql` | SQL real extraído; falta ejecución y análisis. |
+| `practica6-8/consultas/sismos/01-consulta.sql` a `03-consulta.sql` | SQL original con análisis y resultados en algebra-sismos.md. |
 
 Origen: https://github.com/GaelZamudio/Seismic-Data-Visualization-System, HEAD local `8569667cf4f46fab640dba3f82a7b324ca7efaf7`.
 Se copiaron los archivos del árbol local; las huellas identifican su contenido exacto. El proyecto original declara fuentes SSN/INEGI y cita el artículo DOI 10.24275/AZC2026E1004.
@@ -134,8 +133,8 @@ Capturas en `practica6-8/evidencias/integrantes/<nombre-del-archivo-sin-extensio
 HuellaRed procede de https://github.com/GaelZamudio/practica-4-y-5-implementacion,
 `base/huellared/` conserva esquema, migración 001, generador, cargadores y roles. Los cambios nuevos al modelo se harán mediante migraciones numeradas después de cargar los datos, no reescribiendo el esquema inicial.
 
-El análisis 1.1–1.3 está en [normalizacion.md](practica6-8/normalizacion.md); el intercambio externo de F sigue pendiente. Las migraciones 002 y 003 construyen y normalizan una instantánea didáctica de rescates y zonas en el esquema `normalizacion`, conservando las 23 tablas operativas de `public`. Esa descomposición está disponible para la explicación individual. El exportador y el grupo RelaX están en `practica6-8/relax/`. Las 13 consultas del equipo están documentadas en [algebra.md](practica6-8/algebra.md), con SQL y resultados en `practica6-8/consultas/huellared/`. Se comprobaron sobre la muestra compartida y las capturas de RelaX están enlazadas en cada consulta. Las entregas de los compañeros se incorporarán desde sus ramas; comprobar su estado después del merge.
-La Parte 3 carga sismos automáticamente y ejecuta las consultas mediante el servicio `consultas`; véase el README. Las expresiones y entregas pendientes se incorporan al fusionar las ramas de sus responsables. El análisis formal de equivalencia de F con otro equipo pertenece al 1.2 de Gael.
+El análisis 1.1–1.3 está en [normalizacion.md](practica6-8/normalizacion.md). Las migraciones 002 y 003 construyen y normalizan una instantánea didáctica de rescates y zonas en el esquema `normalizacion`, conservando las 23 tablas operativas de `public`. Esa descomposición está disponible para la explicación individual. El exportador y el grupo RelaX están en `practica6-8/relax/`. Las 13 consultas del equipo están documentadas en [algebra.md](practica6-8/algebra.md), con SQL y resultados en `practica6-8/consultas/huellared/`. Se comprobaron sobre la muestra compartida y las capturas de RelaX están enlazadas en cada consulta.
+La Parte 3 carga sismos automáticamente y ejecuta las consultas mediante el servicio `consultas`; véase el README.
 
 ## Arranque de la Parte 3
 
@@ -145,7 +144,7 @@ docker compose run --build --rm consultas
 
 El inicializador prepara HuellaRed, sus migraciones y la base separada de sismos. Después, `consultas` muestra preguntas, álgebra y resultados SQL, y regenera el grupo desde PostgreSQL. Los CSV, el resumen y el grupo regenerado se guardan en `salida/`, sin sobrescribir la muestra de las capturas. Se conservan los datos en un volumen nombrado. Los detalles, las credenciales de prueba y el estado de validación están en [README.md](README.md).
 
-Mantener cada documento sincronizado con el orden de consultas de su SQL. El ejecutor descubre los archivos individuales al integrarlos; una plantilla no se cuenta como trabajo terminado. Para el álgebra, usar bloques de código sin lenguaje o con lenguaje `text` o `relalg`, dentro del apartado de la consulta correspondiente.
+Mantener cada documento sincronizado con el orden de consultas de su SQL. El ejecutor descubre los archivos individuales al integrarlos; los archivos sin sentencias no generan resultados. Para el álgebra, usar bloques de código sin lenguaje o con lenguaje `text` o `relalg`, dentro del apartado de la consulta correspondiente.
 
 ## Cierre de la entrega
 

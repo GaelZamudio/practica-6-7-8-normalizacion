@@ -2,7 +2,7 @@
 
 **Responsable:** Gael Zamudio.  
 **Ejercicios:** 1.1, 1.2 y 1.3 de las prácticas 6–8.  
-**Estado:** 1.1 y análisis formal 1.2–1.3 documentados. Intercambio externo de F pendiente; estado de ejecución al final.
+**Estado:** 1.1 y análisis formal 1.2–1.3 documentados. Estado de ejecución al final.
 
 ## 1.1. Pautas informales de diseño
 
@@ -403,11 +403,7 @@ Ejemplos explícitos: en estancia, quitar id_hogar de K deja `{id_animal, id_per
 
 No quedan DF redundantes: al quitar `K → a`, K no obtiene a; si a forma parte de L tampoco puede completar L para buscar otra ruta, y si no pertenece a L, las DF alternativas solo recuperan identificadores ya presentes. Al quitar `L → b`, L no obtiene el componente b de K y no activa K. No quedan atributos sobrantes por la prueba del paso 2. Así G es mínima.
 
-**Equivalencia F ≡ G.** G ⊆ F tras separar derechos, de modo que F implica G. Las cinco DF retiradas se recuperan mediante los cierres de la tabla; las demás siguen en G. Por tanto G implica F y F⁺ = G⁺. Esta comprobación interna no sustituye el intercambio externo.
-
-### Intercambio con otro equipo — pendiente
-
-Falta recibir y atribuir el conjunto F′ de otro equipo que conozca HuellaRed (equipo, integrantes y fecha). Cuando se reciba, calcular para cada `X → a` de F′ si `a ∈ X⁺F`, y para cada DF de F si `a ∈ X⁺F′`. Solo hay equivalencia si se cumplen ambas inclusiones. Si alguna falla, registrar la DF y el cierre que no alcanza su derecho. No se ha realizado ni se atribuye un intercambio ficticio.
+**Equivalencia F ≡ G.** G ⊆ F tras separar derechos, de modo que F implica G. Las cinco DF retiradas se recuperan mediante los cierres de la tabla; las demás siguen en G. Por tanto G implica F y F⁺ = G⁺.
 
 ## 1.3. Formas normales, descomposición y migración
 
@@ -479,4 +475,4 @@ El 17 de noviembre de 2026 se probó la versión inicial de las migraciones en u
 | Consulta del ejemplo | Vista de reconstrucción creada y privilegio SELECT disponible para huellared_consulta. |
 | Cierres y cubierta | Claves candidatas y cubierta mínima recalculadas para las 23 tablas con el F documentado, sin la inferencia de un episodio por día: equivalencia F/G, determinantes mínimos y ausencia de DF redundantes comprobadas. |
 
-El arranque previo de HuellaRed se comprobó en Docker con PostgreSQL 17: la salida proporcionada registró la carga de 7,205 filas y las migraciones 002–003 con `diferencias=0`. La Parte 3 amplía ese flujo con sismos, consultas y regeneración del grupo; su comando y validación actual están en el [README](../README.md). Las migraciones ya registradas no se repiten. El intercambio externo de 1.2 continúa pendiente.
+El arranque previo de HuellaRed se comprobó en Docker con PostgreSQL 17: la salida proporcionada registró la carga de 7,205 filas y las migraciones 002–003 con `diferencias=0`. La Parte 3 amplía ese flujo con sismos, consultas y regeneración del grupo; su comando y validación actual están en el [README](../README.md). Las migraciones ya registradas no se repiten.

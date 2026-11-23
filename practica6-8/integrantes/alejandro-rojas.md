@@ -1,11 +1,8 @@
 # Trabajo individual — Alejandro Rojas
 
 **Autor:** Alejandro Rojas.  
-**Estado:** consultas, álgebra, SQL y explicación completos; resultados SQL comprobados en HuellaRed. Capturas de RelaX
-pendientes del grupo definitivo de Gael.
-
 **Archivo SQL:** [alejandro-rojas.sql](alejandro-rojas.sql).  
-**Base:** HuellaRed, esquema `public`, cargada con el generador del repositorio (semilla 20261105, 7,205 filas).
+**Base:** muestra compartida de [grupo.txt](../relax/grupo.txt). En pgAdmin cargar primero [muestra.sql](../relax/muestra.sql) en una sesión nueva y ejecutar el SQL individual en esa misma sesión.
 Preguntas enviadas a Gael para reservarlas y no repetir las del equipo. La consulta 2 usa **reunión externa**.
 
 ## Consulta 1 — Perros chicos disponibles para adopción
@@ -15,9 +12,9 @@ Preguntas enviadas a Gael para reservarlas y no repetir las del equipo. La consu
 - **Expresión algebraica:**
 
 ```text
-Perros    ← animal ⋈ perro
-Filtrados ← σ estado_actual = 'disponible_adopcion' ∧ tamano = 'chico' (Perros)
-Resultado ← π id_animal, nombre (Filtrados)
+Perros    = animal ⋈ perro
+Filtrados = σ estado_actual = 'disponible_adopcion' ∧ tamano = 'chico' (Perros)
+π id_animal, nombre (Filtrados)
 ```
 
 **Explicación.** `animal` tiene los datos generales (nombre, estado) y `perro` los datos propios de los perros, como el
@@ -36,22 +33,20 @@ WHERE a.estado_actual = 'disponible_adopcion'
 ORDER BY a.id_animal;
 ```
 
-- **Captura de RelaX con árbol y resultado:** pendiente; se agregará en
-  [evidencias/integrantes/alejandro-rojas/](../evidencias/integrantes/alejandro-rojas/) cuando Gael publique el grupo RelaX.
-- **Resultado SQL:** 12 perros: 62, 102, 113, 147, 155, 164, 168, 232, 308, 317, 391 y 460. Siete no tienen nombre
-  registrado (`NULL`), porque el nombre es opcional.
-- **Comparación con RelaX:** pendiente; debe coincidir con los mismos datos.
 
-## Consulta 2 — Perros que nunca han sido vacunados
+- **Resultado SQL:** 2 perros: 113 (nombre NULL) y 391 (Tizón).
+- **Comparación:** SQL y motor de RelaX devuelven las mismas filas sobre la muestra compartida.
 
-- **Pregunta del dominio:** ¿Qué perros nunca han recibido ninguna vacuna?
+## Consulta 2 — Perros sin vacunaciones registradas en la muestra
+
+- **Pregunta del dominio:** ¿Qué perros no tienen vacunas registradas en la muestra?
 - **Operadores:** reunión externa izquierda (⟕), selección (σ), proyección (π) y reunión natural (⋈).
 - **Expresión algebraica:**
 
 ```text
-ConVacunas ← perro ⟕ vacunacion
-SinVacuna  ← π id_animal, tamano (σ id_vacuna = null (ConVacunas))
-Resultado  ← π id_animal, nombre, tamano (SinVacuna ⋈ animal)
+ConVacunas = perro ⟕ vacunacion
+SinVacuna  = π id_animal, tamano (σ id_vacuna = null (ConVacunas))
+π id_animal, nombre, tamano (SinVacuna ⋈ animal)
 ```
 
 **Explicación.** La reunión externa izquierda conserva **a todos** los perros, aunque no tengan vacunas. Comparten solo
@@ -70,10 +65,9 @@ WHERE v.id_vacuna IS NULL
 ORDER BY a.id_animal;
 ```
 
-- **Captura de RelaX con árbol y resultado:** pendiente; misma carpeta de evidencias.
-- **Resultado SQL:** 88 de los 240 perros no tienen ninguna vacuna registrada. 19 de ellos están disponibles para
-  adopción.
-- **Comparación con RelaX:** pendiente.
+
+- **Resultado SQL:** 7 perros sin vacunaciones registradas en la muestra. Esta ausencia no permite afirmar que nunca hayan recibido vacunas fuera de la muestra.
+- **Comparación:** SQL y motor de RelaX devuelven las mismas filas sobre la muestra compartida.
 
 ## Consulta 3 — Adoptantes con patio
 
@@ -82,8 +76,8 @@ ORDER BY a.id_animal;
 - **Expresión algebraica:**
 
 ```text
-ConPatio  ← σ tiene_patio = true (adoptante)
-Resultado ← π id_persona, nombres, ap_paterno, tipo_vivienda (ConPatio ⋈ persona)
+ConPatio  = σ tiene_patio = true (adoptante)
+π id_persona, nombres, ap_paterno, tipo_vivienda (ConPatio ⋈ persona)
 ```
 
 **Explicación.** `adoptante` guarda los datos de la vivienda, y `persona` el nombre. Primero la selección deja solo a
@@ -101,10 +95,9 @@ WHERE d.tiene_patio = TRUE
 ORDER BY p.id_persona;
 ```
 
-- **Captura de RelaX con árbol y resultado:** pendiente; misma carpeta de evidencias.
-- **Resultado SQL:** 140 de los 260 adoptantes tienen patio: 77 viven en departamento, 45 en casa, 12 en vecindad y 6
-  en otro tipo de vivienda.
-- **Comparación con RelaX:** pendiente.
+
+- **Resultado SQL:** 6 adoptantes con patio en la muestra.
+- **Comparación:** SQL y motor de RelaX devuelven las mismas filas sobre la muestra compartida.
 
 `ORDER BY` aparece solo en SQL para presentar el resultado ordenado. No cambia qué filas se devuelven, y en RelaX se
 omite.
@@ -145,9 +138,6 @@ transitividad.
 
 ## Defensa
 
-Modificaciones preparadas: en la consulta 1, si se cambia `'chico'` por `'grande'`, el resultado pasa de 12 a 17
-perros. En la consulta 2, si se cambia `⟕` por `⋈`, el resultado queda vacío, porque la reunión normal elimina justo a
-los perros sin vacunas. En la consulta 3, si se cambia `tiene_patio = true` por `false`, salen los otros 120
-adoptantes.
+Modificaciones para explicar: cambiar chico por grande en la consulta 1; sustituir la reunión externa por una interna en la consulta 2, que elimina los perros sin vacunas y deja vacío el resultado filtrado; y cambiar tiene_patio a false en la consulta 3. Ejecutar las variantes sobre la misma muestra compartida.
 
 **Firma:** Alejandro Rojas.

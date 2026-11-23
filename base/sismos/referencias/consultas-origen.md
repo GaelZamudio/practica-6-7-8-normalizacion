@@ -1,6 +1,6 @@
 # Consultas originales para el ejercicio 2.3
 
-**Responsable:** Alejandro. **Integración:** Gael. Estado: SQL disponible; análisis y resultados pendientes.
+**Responsable:** Alejandro. **Integración:** Gael. SQL, análisis y resultados documentados en algebra-sismos.md.
 Origen: https://github.com/GaelZamudio/Seismic-Data-Visualization-System, HEAD local `8569667cf4f46fab640dba3f82a7b324ca7efaf7`. Se extrajeron solo las cadenas SQL de los archivos PHP locales;
 no se copiaron sus credenciales. La selección puede revisarse justificando cualquier cambio.
 
@@ -67,9 +67,6 @@ SELECT
 
 Para el archivo ejecutable se fijaron `$1 = 4.0` y `$2 = 2017`. Mantener esos valores al comparar resultados.
 
-## Trabajo que falta
+## Análisis y resultados
 
-Alejandro completa el álgebra, árbol y operador principal de cada consulta en practica6-8/algebra-sismos.md. Debe tratar
-renombramientos, agrupación, COALESCE y ordenación de forma explícita: algunas operaciones pertenecen a
-extensiones del álgebra y ORDER BY es orden de presentación. No eliminar duplicados ni cambiar la semántica
-sin documentarlo. No se han ejecutado las consultas en esta incorporación.
+Las expresiones, árboles y resultados se documentan en [algebra-sismos.md](../../../practica6-8/algebra-sismos.md). Se conservan los filtros, las columnas y la semántica de las consultas originales.

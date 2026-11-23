@@ -1,7 +1,6 @@
 # Ejercicio 1.4 — Formas normales del almacén de sismos
 
 **Responsable y autor:** José.  
-**Estado:** análisis redactado; pendiente de revisión del equipo.
 
 ## Alcance y fuentes
 

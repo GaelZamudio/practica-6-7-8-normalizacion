@@ -1,5 +1,5 @@
 -- Trabajo individual — Alejandro Rojas
--- Base: HuellaRed (esquema public), cargada con base/huellared/datos/generar_datos.py (semilla 20261105).
+-- Base: muestra compartida de HuellaRed. Ejecutar primero ../relax/muestra.sql en la misma sesión.
 -- Tres consultas de lectura. La consulta 2 usa reunión externa izquierda.
 -- Expresiones, resultados y evidencias en alejandro-rojas.md.
 
@@ -14,7 +14,7 @@ WHERE a.estado_actual = 'disponible_adopcion'
 ORDER BY a.id_animal;
 
 -- Consulta 2
--- Pregunta: ¿Qué perros nunca han recibido ninguna vacuna?
+-- Pregunta: ¿Qué perros no tienen vacunas registradas en la muestra?
 -- Álgebra: π id_animal, nombre, tamano ((π id_animal, tamano (σ id_vacuna = null (perro ⟕ vacunacion))) ⋈ animal)
 SELECT a.id_animal, a.nombre, p.tamano
 FROM perro p
